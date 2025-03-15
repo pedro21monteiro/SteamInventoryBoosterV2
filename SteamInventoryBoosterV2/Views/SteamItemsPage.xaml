@@ -6,11 +6,123 @@
       xmlns:local="clr-namespace:SteamInventoryBoosterV2.Views"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="SteamItemsPage">
+      Title="Steam Items Page">
 
-    <Grid>
-        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24">
-            Steam Itens Page
-        </TextBlock>
+    <Grid Grid.Row="0" Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Margin="10">
+            <TextBlock Text="Add New Item" FontWeight="Bold" FontSize="16"/>
+            <StackPanel Orientation="Horizontal" Margin="0,5" VerticalAlignment="Top">
+
+                <StackPanel Width="300" Margin="0,0,10,0">
+                    <TextBlock Text="Link" FontWeight="Bold"/>
+                    <TextBox x:Name="TextBoxLink" Text="{Binding TextBoxLink, UpdateSourceTrigger=PropertyChanged}"/>
+                </StackPanel>
+
+                <StackPanel Width="100" Margin="0,0,10,0">
+                    <TextBlock Text="Buy Price" FontWeight="Bold"/>
+                    <TextBox x:Name="TextBoxBuyPrice" Text="{Binding TextBoxBuyPrice, UpdateSourceTrigger=PropertyChanged}"/>
+                </StackPanel>
+
+                <StackPanel Width="100" Margin="0,0,10,0">
+                    <TextBlock Text="Sell Price" FontWeight="Bold"/>
+                    <TextBox x:Name="TextBoxSellPrice" Text="{Binding TextBoxSellPrice, UpdateSourceTrigger=PropertyChanged}"/>
+                </StackPanel>
+
+                <StackPanel Width="100" Margin="0,0,10,0">
+                    <TextBlock Text="Profit" FontWeight="Bold"/>
+                    <TextBox x:Name="TextBoxProfit" Text="{Binding TextBoxProfit, Mode=OneWay}" IsReadOnly="True" Background="LightGray"/>
+                </StackPanel>
+
+                <StackPanel Width="150">
+                    <TextBlock Text="Profit Percentage" FontWeight="Bold"/>
+                    <TextBox x:Name="TextBoxProfitPercentage" Text="{Binding TextBoxProfitPercentage, Mode=OneWay}" IsReadOnly="True" Background="LightGray"/>
+                </StackPanel>
+
+                <Button x:Name="AddButton" Content="Add" Command="{Binding AddItemCommand}" Width="100" Margin="10,0,0,0"/>
+            </StackPanel>
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10">
+            <StackPanel Width="300" Margin="0,0,10,0">
+                <TextBlock Text="Item Name" FontWeight="Bold" />
+                <TextBox x:Name="SearchTextBox" Text="{Binding SearchTerm, UpdateSourceTrigger=PropertyChanged}" />
+            </StackPanel>
+            <Button x:Name="SearchButton" Content="Search" Command="{Binding SearchCommand}" Width="100"/>
+        </StackPanel>
+
+        <ListView Grid.Row="2" x:Name="ItemsListView" ItemsSource="{Binding FilteredSteamItensInformation}"  
+          SelectedItem="{Binding SelectedItem}" Margin="10"
+          ScrollViewer.HorizontalScrollBarVisibility="Auto"
+          ScrollViewer.VerticalScrollBarVisibility="Auto">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Width="80">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Content="Icon"/>
+                        </GridViewColumn.Header>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Image Source="{Binding ItemIcon}" Width="50" Height="50" Stretch="Uniform"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="300" DisplayMemberBinding="{Binding Name}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Content="Name"/>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn Width="100" DisplayMemberBinding="{Binding BuyPrice}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Content="Buy Price"/>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn Width="100" DisplayMemberBinding="{Binding SellPrice}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Content="Sell Price"/>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn Width="100" DisplayMemberBinding="{Binding SellProfit}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Content="Profit"/>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn Width="150" DisplayMemberBinding="{Binding ProfitPercentage}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Content="Profit Percentage"/>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn Width="150" DisplayMemberBinding="{Binding LastVerification}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Content="Last Verification"/>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn Width="100" DisplayMemberBinding="{Binding AtualPrice}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Content="Atual Price"/>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn Width="150" DisplayMemberBinding="{Binding HighestPurchaseOrder}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Content="Highest Purchase Order"/>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+
+            <ListView.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Go to Page" Command="{Binding GoToPageCommand}" CommandParameter="{Binding SelectedItem}"/>
+                    <MenuItem Header="Edit" Command="{Binding EditItemCommand}" CommandParameter="{Binding SelectedItem}"/>
+                    <MenuItem Header="Update" Command="{Binding UpdateItemCommand}" CommandParameter="{Binding SelectedItem}"/>
+                    <MenuItem Header="Remove" Command="{Binding RemoveItemCommand}" CommandParameter="{Binding SelectedItem}"/>
+                </ContextMenu>
+            </ListView.ContextMenu>
+        </ListView>
     </Grid>
 </Page>

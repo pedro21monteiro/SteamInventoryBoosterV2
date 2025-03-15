@@ -6,29 +6,21 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>Assets\Icons\AppIcon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Assets\AppIcon.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="Assets\AppIcon.png">
+    <Content Include="Assets\AppImage.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Assets\Icons\AppIcon.ico" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Dao\" />
-    <Folder Include="Interfaces\IDao\" />
-    <Folder Include="Interfaces\IServices\" />
     <Folder Include="Models\Domain\" />
-    <Folder Include="Models\Utilities\" />
     <Folder Include="Models\SteamApiResponse\" />
     <Folder Include="Models\SteamApi\" />
     <Folder Include="ViewModels\Commands\" />
-    <Folder Include="ViewModels\ItemViewModels\" />
-    <Folder Include="Services\" />
     <Folder Include="Scripts\" />
   </ItemGroup>
 

@@ -1,7 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using SteamInventoryBoosterV2.Dao;
 using SteamInventoryBoosterV2.Data;
+using SteamInventoryBoosterV2.Interfaces.IDao;
+using SteamInventoryBoosterV2.Interfaces.IServices;
+using SteamInventoryBoosterV2.Services;
 using SteamInventoryBoosterV2.ViewModels;
+using SteamInventoryBoosterV2.ViewModels.ItemViewModels;
 using SteamInventoryBoosterV2.Views;
 using System;
 using System.Configuration;
@@ -52,18 +57,20 @@ public partial class App : Application
         services.AddDbContext<AppDbContext>();
         //services.AddSingleton<IWebScraper, WebScraper>();
         //.AddSingleton<ISteamApiService, SteamApiService>();
-        //services.AddSingleton<ISteamItemDao, SteamItemDao>();
-        //services.AddSingleton<ISteamItemService, SteamItemService>();
+        services.AddTransient<ISteamItemDao, SteamItemDao>();
+        services.AddTransient<ISteamItemService, SteamItemService>();
 
         // Regist Main Window
         services.AddTransient<MainAppWindow>();
         services.AddTransient<MainAppWindowViewModel>();
 
-        // Regist pages
-        services.AddSingleton<SteamItemsPage>();
-        services.AddSingleton<InventoryManagementPage>();
-        services.AddSingleton<BotManagerPage>();
-        services.AddSingleton<SettingsPage>();
+        // Regist Pages
+        services.AddTransient<SteamItemsPage>();
+        services.AddTransient<SteamItemsViewModel>();
+
+        services.AddTransient<InventoryManagementPage>();
+        services.AddTransient<BotManagerPage>();
+        services.AddTransient<SettingsPage>();
 
     }
     private static void ExecuteOpenChromePagesScript(string scriptName)

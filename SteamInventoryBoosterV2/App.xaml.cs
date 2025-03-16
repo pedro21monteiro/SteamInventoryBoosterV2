@@ -42,7 +42,7 @@ public partial class App : Application
         // Inicializa o singleton do webScraper manualmente, o singleton é iniciado quando o mesmo é utilizado 
         //pela primeira vez no projeto, como eu quero que as abras abra logo no inicio vou já forçar
         //essa inicialização
-        //var webScraper = _serviceProvider.GetRequiredService<IWebScraper>();
+        var webScraper = _serviceProvider.GetRequiredService<IWebScraper>();
 
         // Show Main Window
         var newMainWindow = _serviceProvider.GetRequiredService<MainAppWindow>();
@@ -55,7 +55,7 @@ public partial class App : Application
     {
         // Regist Services
         services.AddDbContext<AppDbContext>();
-        //services.AddSingleton<IWebScraper, WebScraper>();
+        services.AddSingleton<IWebScraper, WebScraper>();
         //.AddSingleton<ISteamApiService, SteamApiService>();
         services.AddTransient<ISteamItemDao, SteamItemDao>();
         services.AddTransient<ISteamItemService, SteamItemService>();
@@ -80,7 +80,7 @@ public partial class App : Application
         ProcessStartInfo processStartInfo = new ProcessStartInfo
         {
             FileName = "cmd.exe",
-            Arguments = $"/c \"{scriptPath}\"", // /c para executar e fechar
+            Arguments = $"/c \"{scriptPath}\"", // /c to execute and close
             UseShellExecute = false,
             RedirectStandardOutput = true,
             RedirectStandardError = true,

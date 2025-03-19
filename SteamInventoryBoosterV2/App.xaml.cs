@@ -59,6 +59,7 @@ public partial class App : Application
         //.AddSingleton<ISteamApiService, SteamApiService>();
         services.AddTransient<ISteamItemDao, SteamItemDao>();
         services.AddTransient<ISteamItemService, SteamItemService>();
+        services.AddTransient<IMessageBoxService, MessageBoxService>();
 
         // Regist Main Window
         services.AddTransient<MainAppWindow>();

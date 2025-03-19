@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
@@ -10,6 +11,16 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
 {
     public class SteamItemModel : INotifyPropertyChanged
     {
+        private int _id;
+        public int Id
+        {
+            get => _id;
+            set
+            {
+                _id = value;
+                OnPropertyChanged(nameof(Id));
+            }
+        }
         private string _link = String.Empty;
         public string Link
         {

@@ -13,5 +13,6 @@ namespace SteamInventoryBoosterV2.Models.Dtos
         public double Price { get; set; }
         public double HighestPurchaseOrder { get; set; }
         public string IconUrl { get; set; } = string.Empty;
+        public DateTime LastVerification { get; set; }
     }
 }

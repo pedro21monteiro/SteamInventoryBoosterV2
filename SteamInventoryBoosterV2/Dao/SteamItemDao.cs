@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SteamInventoryBoosterV2.Data;
 using SteamInventoryBoosterV2.Interfaces.IDao;
+using SteamInventoryBoosterV2.Models.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,13 @@ namespace SteamInventoryBoosterV2.Dao
         {
             return await _context.SteamItems
                 .AnyAsync(s => s.Link == link);
+        }
+
+        public async Task<SteamItem> CreateAsync(SteamItem steamItem)
+        {
+            _context.SteamItems.Add(steamItem);
+            await _context.SaveChangesAsync();
+            return steamItem;
         }
     }
 }

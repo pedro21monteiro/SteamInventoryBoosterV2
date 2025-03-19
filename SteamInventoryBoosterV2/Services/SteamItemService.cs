@@ -1,6 +1,8 @@
 ﻿using SteamInventoryBoosterV2.Interfaces.IDao;
 using SteamInventoryBoosterV2.Interfaces.IServices;
 using SteamInventoryBoosterV2.Models.Domain;
+using SteamInventoryBoosterV2.Models.Dtos;
+using SteamInventoryBoosterV2.Models.Mappings;
 using SteamInventoryBoosterV2.Models.Utilities;
 using System;
 using System.Collections.Generic;
@@ -13,46 +15,43 @@ namespace SteamInventoryBoosterV2.Services
     public class SteamItemService : ISteamItemService
     {
         private readonly ISteamItemDao _steamItemDao;
-        public SteamItemService(ISteamItemDao steamItemDao)
+        private readonly IWebScraper _webScraper;
+        public SteamItemService(ISteamItemDao steamItemDao, IWebScraper webScraper)
         {
             _steamItemDao = steamItemDao ?? throw new ArgumentNullException(nameof(steamItemDao));
+            _webScraper = webScraper ?? throw new ArgumentNullException(nameof(webScraper));
         }
 
-        public async Task<Result<SteamItem>> CreateSteamItemAsync(string link)
+        public async Task<Result<SteamItem>> CreateSteamItemAsync(string link, double buyPrice, double sellPrice)
         {
-            var itemExists = await _steamItemDao.ItemExistsByLinkAsync(link);
-            if (itemExists)
+            try
             {
-                return Result<SteamItem>.Failure(Error.SteamItemAlreadyExists);
+                var itemExists = await _steamItemDao.ItemExistsByLinkAsync(link);
+                if (itemExists)
+                {
+                    return Result<SteamItem>.Failure(Error.SteamItemAlreadyExists);
+                }
+
+                var colectItemInfoResult = await _webScraper.CollectBasicSteamItemInformation(link);
+
+                if (!colectItemInfoResult.IsSuccess || colectItemInfoResult.Value == null)
+                {
+                    return Result<SteamItem>.Failure(colectItemInfoResult.Error ?? Error.InternalError);
+                }
+
+                SteamItem steamItem = SteamItemMapping.ToEntity(colectItemInfoResult.Value);
+                steamItem.BuyPrice = buyPrice;
+                steamItem.SellPrice = sellPrice;
+
+                var createdItem = await _steamItemDao.CreateAsync(steamItem);
+
+                return Result<SteamItem>.Success(createdItem);
             }
-
-            return Result<SteamItem>.Success(new SteamItem());
-
-
-            // Vai ter de coletar os dados do item
-
-            // Vai ter de fazer download da imagem e guardar numa pasta
-
-
-
-
-            //// Se não existe, criar o novo item
-            //try
-            //{
-            //    var createdItem = await _steamItemDao.CreateSteamItemAsync(steamItem);
-            //    if (createdItem != null)
-            //    {
-            //        return Result<SteamItem>.Success(createdItem); // Criação bem-sucedida
-            //    }
-            //    else
-            //    {
-            //        return Result<SteamItem>.Failure(null); // Falha ao criar o item
-            //    }
-            //}
-            //catch (Exception)
-            //{
-            //    return Result<SteamItem>.Failure(null); // Falha no processo de criação
-            //}
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Internal error while trying to create steam item for {link}: {ex.Message}");
+                return Result<SteamItem>.Failure(Error.InternalError);
+            }
         }
 
     }

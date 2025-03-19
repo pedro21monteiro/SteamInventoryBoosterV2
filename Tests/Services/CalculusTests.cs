@@ -42,5 +42,31 @@ namespace Tests.Services
             // Assert
             Assert.Equal(expected, result);
         }
+
+        [Theory]
+        [InlineData(0.20, 0.25, 0.02)]
+        [InlineData(0.35, 0.42, 0.03)]
+        [InlineData(0.03, 0.03, - 0.02)]
+        public void SellItemProfit_ShouldReturnExpected(decimal buyPrice, decimal sellPrice, decimal expected)
+        {
+            // Act
+            var result = Calculus.SellItemProfit(buyPrice, sellPrice);
+
+            // Assert
+            Assert.Equal(expected, result);
+        }
+
+        //[Theory]
+        //[InlineData(0.015, 0.01)]
+        //[InlineData(0.038, 0.03)]
+        //[InlineData(100.9999, 100.99)]
+        //public void GetDecimalWithTwoDecimals_ShouldReturnExpected(decimal input, decimal expected)
+        //{
+        //    // Act
+        //    var result = Calculus.GetDecimalWithTwoDecimals(input);
+
+        //    // Assert
+        //    Assert.Equal(expected, result);
+        //}
     }
 }

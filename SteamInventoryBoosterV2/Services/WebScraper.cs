@@ -104,11 +104,13 @@ namespace SteamInventoryBoosterV2.Services
                 string highestPurchaseOrderString = elementHighestPurchaseOrder.Text.Replace("€", "");
                 steamItemInfoDto.HighestPurchaseOrder = double.Parse(highestPurchaseOrderString);
 
+                steamItemInfoDto.LastVerification = DateTime.Now;
+
                 return Result<SteamItemInfoDto>.Success(steamItemInfoDto);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Internal error while trying to get steam item info for {link}: {ex.Message}");
+                Console.WriteLine($"Internal error while trying to get steam item info for {link}: {ex.Message} \n{ex}");
                 return Result<SteamItemInfoDto>.Failure(Error.InternalError);
             }
             finally

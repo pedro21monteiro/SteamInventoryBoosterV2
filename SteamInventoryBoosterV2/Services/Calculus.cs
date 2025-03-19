@@ -82,7 +82,11 @@ namespace SteamInventoryBoosterV2.Services
             return GetDecimalWithTwoDecimals(receivedMoney + steamTaxAmount + cs2TaxAmount);
         }
 
-        private static decimal GetDecimalWithTwoDecimals(decimal number)
+        public static decimal SellItemProfit(decimal buyPrice, decimal sellPrice)
+        {
+            return BuyerPaysToSellerReceives(sellPrice) - buyPrice;
+        }
+        internal static decimal GetDecimalWithTwoDecimals(decimal number)
         {
             // return only to 2 decimal places 
             return Math.Truncate(number * 100) / 100;

@@ -20,7 +20,6 @@
     <Folder Include="Models\Domain\" />
     <Folder Include="Models\SteamApiResponse\" />
     <Folder Include="Models\SteamApi\" />
-    <Folder Include="ViewModels\Commands\" />
   </ItemGroup>
 
   <ItemGroup>

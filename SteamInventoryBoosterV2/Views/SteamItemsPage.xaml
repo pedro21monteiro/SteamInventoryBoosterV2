@@ -21,27 +21,27 @@
 
                 <StackPanel Width="300" Margin="0,0,10,0">
                     <TextBlock Text="Link" FontWeight="Bold"/>
-                    <TextBox x:Name="TextBoxLink" Text="{Binding TextBoxLink, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox x:Name="TextBoxLink" Text="{Binding LinkInput, UpdateSourceTrigger=PropertyChanged}"/>
                 </StackPanel>
 
                 <StackPanel Width="100" Margin="0,0,10,0">
                     <TextBlock Text="Buy Price" FontWeight="Bold"/>
-                    <TextBox x:Name="TextBoxBuyPrice" Text="{Binding TextBoxBuyPrice, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox x:Name="TextBoxBuyPrice" Text="{Binding BuyPriceInput, UpdateSourceTrigger=PropertyChanged}"/>
                 </StackPanel>
 
                 <StackPanel Width="100" Margin="0,0,10,0">
                     <TextBlock Text="Sell Price" FontWeight="Bold"/>
-                    <TextBox x:Name="TextBoxSellPrice" Text="{Binding TextBoxSellPrice, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox x:Name="TextBoxSellPrice" Text="{Binding SellPriceInput, UpdateSourceTrigger=PropertyChanged}"/>
                 </StackPanel>
 
                 <StackPanel Width="100" Margin="0,0,10,0">
                     <TextBlock Text="Profit" FontWeight="Bold"/>
-                    <TextBox x:Name="TextBoxProfit" Text="{Binding TextBoxProfit, Mode=OneWay}" IsReadOnly="True" Background="LightGray"/>
+                    <TextBox x:Name="TextBoxProfit" Text="{Binding ProfitInput, Mode=OneWay}" IsReadOnly="True" Background="LightGray"/>
                 </StackPanel>
 
                 <StackPanel Width="150">
                     <TextBlock Text="Profit Percentage" FontWeight="Bold"/>
-                    <TextBox x:Name="TextBoxProfitPercentage" Text="{Binding TextBoxProfitPercentage, Mode=OneWay}" IsReadOnly="True" Background="LightGray"/>
+                    <TextBox x:Name="TextBoxProfitPercentage" Text="{Binding ProfitPercentageInput, Mode=OneWay}" IsReadOnly="True" Background="LightGray"/>
                 </StackPanel>
 
                 <Button x:Name="AddButton" Content="Add" Command="{Binding AddItemCommand}" Width="100" Margin="10,0,0,0"/>
@@ -51,7 +51,7 @@
         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10">
             <StackPanel Width="300" Margin="0,0,10,0">
                 <TextBlock Text="Item Name" FontWeight="Bold" />
-                <TextBox x:Name="SearchTextBox" Text="{Binding SearchTerm, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox x:Name="SearchTextBox" Text="{Binding SearchTermInput, UpdateSourceTrigger=PropertyChanged}" />
             </StackPanel>
             <Button x:Name="SearchButton" Content="Search" Command="{Binding SearchCommand}" Width="100"/>
         </StackPanel>

@@ -77,22 +77,22 @@
                             <GridViewColumnHeader Content="Name"/>
                         </GridViewColumn.Header>
                     </GridViewColumn>
-                    <GridViewColumn Width="100" DisplayMemberBinding="{Binding BuyPrice}">
+                    <GridViewColumn Width="100" DisplayMemberBinding="{Binding BuyPrice, StringFormat='{}{0:F2}€'}">
                         <GridViewColumn.Header>
                             <GridViewColumnHeader Content="Buy Price"/>
                         </GridViewColumn.Header>
                     </GridViewColumn>
-                    <GridViewColumn Width="100" DisplayMemberBinding="{Binding SellPrice}">
+                    <GridViewColumn Width="100" DisplayMemberBinding="{Binding SellPrice, StringFormat='{}{0:F2}€'}">
                         <GridViewColumn.Header>
                             <GridViewColumnHeader Content="Sell Price"/>
                         </GridViewColumn.Header>
                     </GridViewColumn>
-                    <GridViewColumn Width="100" DisplayMemberBinding="{Binding SellProfit}">
+                    <GridViewColumn Width="100" DisplayMemberBinding="{Binding SellProfit, StringFormat='{}{0:F2}€'}">
                         <GridViewColumn.Header>
                             <GridViewColumnHeader Content="Profit"/>
                         </GridViewColumn.Header>
                     </GridViewColumn>
-                    <GridViewColumn Width="150" DisplayMemberBinding="{Binding ProfitPercentage}">
+                    <GridViewColumn Width="150" DisplayMemberBinding="{Binding ProfitPercentage, StringFormat='{}{0:F2}%'}">
                         <GridViewColumn.Header>
                             <GridViewColumnHeader Content="Profit Percentage"/>
                         </GridViewColumn.Header>
@@ -102,12 +102,12 @@
                             <GridViewColumnHeader Content="Last Verification"/>
                         </GridViewColumn.Header>
                     </GridViewColumn>
-                    <GridViewColumn Width="100" DisplayMemberBinding="{Binding AtualPrice}">
+                    <GridViewColumn Width="100" DisplayMemberBinding="{Binding AtualPrice, StringFormat='{}{0:F2}€'}">
                         <GridViewColumn.Header>
                             <GridViewColumnHeader Content="Atual Price"/>
                         </GridViewColumn.Header>
                     </GridViewColumn>
-                    <GridViewColumn Width="150" DisplayMemberBinding="{Binding HighestPurchaseOrder}">
+                    <GridViewColumn Width="150" DisplayMemberBinding="{Binding HighestPurchaseOrder, StringFormat='{}{0:F2}€'}">
                         <GridViewColumn.Header>
                             <GridViewColumnHeader Content="Highest Purchase Order"/>
                         </GridViewColumn.Header>

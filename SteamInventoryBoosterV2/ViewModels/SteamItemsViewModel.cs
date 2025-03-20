@@ -28,10 +28,11 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
             _steamItemService = steamItemService ?? throw new ArgumentNullException(nameof(steamItemService));
             _messageBoxService = messageBoxService ?? throw new ArgumentNullException(nameof(messageBoxService));
 
-            AddItemCommand = new RelayCommandAsync(CreateStemItemAsync, IsBuyAndSellPricesDefined);
+            AddItemCommand = new RelayCommandAsync(CreateStemItemAsync, CanAddSteamItem);
             GoToPageCommand = new RelayCommand(GoToStemItemPage, _ => true);
+            EditItemCommand = new RelayCommandAsync(EditSteamItemAsync, IsBuyAndSellPricesDefined);
+
             FilteredSteamItensInformation = new ObservableCollection<SteamItemModel>();
-            //FilteredSteamItensInformation.Add(new SteamItemModel { Name = "Item 1", BuyPrice = 2.5, SellPrice = 3.0, LastVerification = DateTime.Now, AtualPrice = 3.2, HighestPurchaseOrder = 2.8, IconPath = "/Assets/AppImage.png" });
 
             LoadSteamItems();
         }
@@ -39,6 +40,7 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
         // Commands
         public ICommand AddItemCommand { get; }
         public ICommand GoToPageCommand { get; }
+        public ICommand EditItemCommand { get; }
 
         public SteamItemModel SelectedItem { get; set; }
 
@@ -76,6 +78,7 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
                 {
                     CalculateProfit();
                     ((RelayCommandAsync)AddItemCommand).RaiseCanExecuteChanged();
+                    ((RelayCommandAsync)EditItemCommand).RaiseCanExecuteChanged();
                 }
             }
         }
@@ -90,6 +93,7 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
                 {
                     CalculateProfit();
                     ((RelayCommandAsync)AddItemCommand).RaiseCanExecuteChanged();
+                    ((RelayCommandAsync)EditItemCommand).RaiseCanExecuteChanged();
                 }
             }
         }
@@ -108,11 +112,16 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
             private set => SetProperty(ref _profitPercentageInput, value);
         }
 
+        private bool CanAddSteamItem(object parameter)
+        {
+            return IsBuyAndSellPricesDefined(parameter)
+                && !string.IsNullOrEmpty(LinkInput);
+        }
+
         private bool IsBuyAndSellPricesDefined(object parameter)
         {
             return !string.IsNullOrEmpty(BuyPriceInput)
                 && !string.IsNullOrEmpty(SellPriceInput)
-                && !string.IsNullOrEmpty(LinkInput)
                 && ProfitInput != "N/A"
                 && ProfitPercentageInput != "N/A";
         }
@@ -154,7 +163,7 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
         {
             if (!decimal.TryParse(BuyPriceInput, out decimal buyPrice) || !decimal.TryParse(SellPriceInput, out decimal sellPrice))
             {
-                MessageBox.Show("Please enter valid prices.");
+                _messageBoxService.ShowWarning("Please enter valid prices.");
                 return;
             }
 
@@ -211,6 +220,28 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
                 Console.WriteLine($"Internal error while trying to open the link {SelectedItem.Link}: {ex.Message} \n{ex}");
                 _messageBoxService.ShowError($"Error opening link: {ex.Message}");
             }
+        }
+
+        private async Task EditSteamItemAsync(object parameter)
+        {
+            if (!decimal.TryParse(BuyPriceInput, out decimal buyPrice) || !decimal.TryParse(SellPriceInput, out decimal sellPrice))
+            {
+                _messageBoxService.ShowWarning("Please enter valid prices.");
+                return;
+            }
+
+            //Result<SteamItem> createSteamItemResult = await _steamItemService.CreateSteamItemAsync(LinkInput, buyPrice, sellPrice);
+
+            //if (!createSteamItemResult.IsSuccess)
+            //{
+            //    _messageBoxService.ShowError($"Failed to create the item: {createSteamItemResult.Error!.Message}");
+            //    return;
+            //}
+
+            //_messageBoxService.ShowSuccess("Item created successfully!");
+
+            //SteamItemModel steamItemModel = SteamItemMapping.ToItemViewModel(createSteamItemResult.Value!);
+            //FilteredSteamItensInformation.Add(steamItemModel);
         }
     }
 }

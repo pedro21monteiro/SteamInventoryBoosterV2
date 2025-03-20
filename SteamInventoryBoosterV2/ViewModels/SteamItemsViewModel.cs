@@ -31,6 +31,7 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
             AddItemCommand = new RelayCommandAsync(CreateStemItemAsync, CanAddSteamItem);
             GoToPageCommand = new RelayCommand(GoToStemItemPage, _ => true);
             EditItemCommand = new RelayCommandAsync(EditSteamItemAsync, IsBuyAndSellPricesDefined);
+            RemoveItemCommand = new RelayCommandAsync(RemoveSteamItemAsync, _ => true);
 
             FilteredSteamItensInformation = new ObservableCollection<SteamItemModel>();
 
@@ -41,6 +42,7 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
         public ICommand AddItemCommand { get; }
         public ICommand GoToPageCommand { get; }
         public ICommand EditItemCommand { get; }
+        public ICommand RemoveItemCommand { get; }
 
         public SteamItemModel SelectedItem { get; set; }
 
@@ -248,6 +250,27 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
             SelectedItem.SellPrice = sellPrice;
 
             _messageBoxService.ShowSuccess("Item edited successfully!");
+        }
+
+        private async Task RemoveSteamItemAsync(object parameter)
+        {
+            var confirmResult = _messageBoxService.ShowYesNo($"Are you sure you want to delete the steam item {SelectedItem.Name}?");
+            if (confirmResult != MessageBoxResult.Yes)
+            {
+                return;
+            }
+
+            Result deleteSteamItemResult = await _steamItemService.DeleteSteamItemAsync(SelectedItem.Id);
+
+            if (!deleteSteamItemResult.IsSuccess)
+            {
+                _messageBoxService.ShowError($"Failed to delete the item: {deleteSteamItemResult.Error!.Message}");
+                return;
+            }
+
+            FilteredSteamItensInformation.Remove(SelectedItem);
+
+            _messageBoxService.ShowSuccess("Item deleted successfully!");
         }
     }
 }

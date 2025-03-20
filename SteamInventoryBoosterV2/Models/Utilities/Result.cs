@@ -6,27 +6,35 @@ using System.Threading.Tasks;
 
 namespace SteamInventoryBoosterV2.Models.Utilities
 {
-    public class Result<T>
+    public class Result
     {
         public bool IsSuccess { get; }
-        public T? Value { get; }
         public Error? Error { get; }
 
-        private Result(T value)
+        protected Result(bool isSuccess, Error? error)
         {
-            IsSuccess = true;
-            Value = value;
-            Error = null;
-        }
-
-        public Result(Error error)
-        {
-            IsSuccess = false;
+            IsSuccess = isSuccess;
             Error = error;
         }
 
+        public static Result Success() => new Result(true, null);
+
+        public static Result Failure(Error error) => new Result(false, error);
+    }
+
+    public class Result<T> : Result
+    {
+        public T? Value { get; }
+
+        private Result(T value) : base(true, null)
+        {
+            Value = value;
+        }
+
+        private Result(Error error) : base(false, error) { }
+
         public static Result<T> Success(T value) => new Result<T>(value);
 
-        public static Result<T> Failure(Error error) => new Result<T>(error);
+        public static new Result<T> Failure(Error error) => new Result<T>(error);
     }
 }

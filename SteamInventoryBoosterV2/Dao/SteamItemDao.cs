@@ -45,5 +45,11 @@ namespace SteamInventoryBoosterV2.Dao
         {
             return await _context.SteamItems.FirstOrDefaultAsync(i => i.Id == id);
         }
+
+        public async Task DeleteAsync(SteamItem item)
+        {
+            _context.SteamItems.Remove(item);
+            await _context.SaveChangesAsync();
+        }
     }
 }

@@ -94,5 +94,27 @@ namespace SteamInventoryBoosterV2.Services
             }
         }
 
+        public async Task<Result> DeleteSteamItemAsync(int itemId)
+        {
+            try
+            {
+                var existingItem = await _steamItemDao.GetSteamItemByIdAsync(itemId);
+
+                if (existingItem == null)
+                {
+                    return Result.Failure(Error.SteamItemNotFound);
+                }
+
+                await _steamItemDao.DeleteAsync(existingItem);
+
+                return Result.Success();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Internal error while trying to delete steam item: {ex.Message} \n{ex}");
+                return Result<SteamItem>.Failure(Error.InternalError);
+            }
+        }
+
     }
 }

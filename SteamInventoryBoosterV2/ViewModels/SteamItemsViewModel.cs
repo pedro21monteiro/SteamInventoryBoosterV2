@@ -114,12 +114,11 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
         {
             if (decimal.TryParse(BuyPriceInput, out var buy) && decimal.TryParse(SellPriceInput, out var sell) && IsValidDecimal(BuyPriceInput) && IsValidDecimal(SellPriceInput))
             {
-                var profit = Calculus.BuyerPaysToSellerReceives(sell) - buy;
-                ProfitInput = profit.ToString("F2");
+                ProfitInput = Calculus.SellItemProfit(buy, sell).ToString("F2");
 
                 if (buy != 0)
                 {
-                    ProfitPercentageInput = ((profit / buy) * 100).ToString("F2") + "%";
+                    ProfitPercentageInput = Calculus.SellItemProfitPercentage(buy, sell).ToString("F2") + "%";
                 }
                 else
                 {
@@ -146,7 +145,7 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
 
         private async Task CreateStemItemAsync(object parameter)
         {
-            if (!double.TryParse(BuyPriceInput, out double buyPrice) || !double.TryParse(SellPriceInput, out double sellPrice))
+            if (!decimal.TryParse(BuyPriceInput, out decimal buyPrice) || !decimal.TryParse(SellPriceInput, out decimal sellPrice))
             {
                 MessageBox.Show("Please enter valid prices.");
                 return;

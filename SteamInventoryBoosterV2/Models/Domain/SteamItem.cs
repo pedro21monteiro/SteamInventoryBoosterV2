@@ -13,11 +13,11 @@ namespace SteamInventoryBoosterV2.Models.Domain
         public int Id { get; set; }
         public string Link { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
-        public double Price { get; set; }
-        public double HighestPurchaseOrder { get; set; }
+        public decimal Price { get; set; }
+        public decimal HighestPurchaseOrder { get; set; }
         public DateTime LastVerification { get; set; }
-        public double? BuyPrice { get; set; }
-        public double? SellPrice { get; set; }
+        public decimal? BuyPrice { get; set; }
+        public decimal? SellPrice { get; set; }
         public string IconPath { get; set; } = string.Empty;
     }
 }

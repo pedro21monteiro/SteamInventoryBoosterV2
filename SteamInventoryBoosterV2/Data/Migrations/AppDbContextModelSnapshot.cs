@@ -30,11 +30,11 @@ namespace SteamInventoryBoosterV2.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<double?>("BuyPrice")
-                        .HasColumnType("float");
+                    b.Property<decimal?>("BuyPrice")
+                        .HasColumnType("decimal(18,2)");
 
-                    b.Property<double>("HighestPurchaseOrder")
-                        .HasColumnType("float");
+                    b.Property<decimal>("HighestPurchaseOrder")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("IconPath")
                         .IsRequired()
@@ -51,11 +51,11 @@ namespace SteamInventoryBoosterV2.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<double>("Price")
-                        .HasColumnType("float");
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
 
-                    b.Property<double?>("SellPrice")
-                        .HasColumnType("float");
+                    b.Property<decimal?>("SellPrice")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 

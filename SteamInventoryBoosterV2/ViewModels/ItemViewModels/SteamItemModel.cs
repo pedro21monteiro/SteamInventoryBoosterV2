@@ -43,8 +43,8 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
             }
         }
 
-        private double _buyPrice;
-        public double BuyPrice
+        private decimal _buyPrice;
+        public decimal BuyPrice
         {
             get => _buyPrice;
             set
@@ -54,8 +54,8 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
             }
         }
 
-        private double _sellPrice;
-        public double SellPrice
+        private decimal _sellPrice;
+        public decimal SellPrice
         {
             get => _sellPrice;
             set
@@ -65,8 +65,8 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
             }
         }
 
-        private double _sellProfit;
-        public double SellProfit
+        private decimal _sellProfit;
+        public decimal SellProfit
         {
             get => _sellProfit;
             set
@@ -76,8 +76,8 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
             }
         }
 
-        private double _profitPercentage;
-        public double ProfitPercentage
+        private decimal _profitPercentage;
+        public decimal ProfitPercentage
         {
             get => _profitPercentage;
             set
@@ -98,8 +98,8 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
             }
         }
 
-        private double _atualPrice;
-        public double AtualPrice
+        private decimal _atualPrice;
+        public decimal AtualPrice
         {
             get => _atualPrice;
             set
@@ -109,8 +109,8 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
             }
         }
 
-        private double _highestPurchaseOrder;
-        public double HighestPurchaseOrder
+        private decimal _highestPurchaseOrder;
+        public decimal HighestPurchaseOrder
         {
             get => _highestPurchaseOrder;
             set

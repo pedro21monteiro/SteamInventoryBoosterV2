@@ -94,7 +94,7 @@ namespace SteamInventoryBoosterV2.Services
                     return driver.FindElement(By.CssSelector("#market_commodity_forsale > span:nth-child(2)"));
                 });
                 string atualPriceString = elementAtualPrice.Text.Replace("€", "");
-                steamItemInfoDto.Price = double.Parse(atualPriceString);
+                steamItemInfoDto.Price = decimal.Parse(atualPriceString);
 
                 // Extract Highest Purchase Order
                 IWebElement elementHighestPurchaseOrder = wait.Until(driver =>
@@ -102,7 +102,7 @@ namespace SteamInventoryBoosterV2.Services
                     return driver.FindElement(By.CssSelector("#market_commodity_buyrequests > span:nth-child(2)"));
                 });
                 string highestPurchaseOrderString = elementHighestPurchaseOrder.Text.Replace("€", "");
-                steamItemInfoDto.HighestPurchaseOrder = double.Parse(highestPurchaseOrderString);
+                steamItemInfoDto.HighestPurchaseOrder = decimal.Parse(highestPurchaseOrderString);
 
                 steamItemInfoDto.LastVerification = DateTime.Now;
 

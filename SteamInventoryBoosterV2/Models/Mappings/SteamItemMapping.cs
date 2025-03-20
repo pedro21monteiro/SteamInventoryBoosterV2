@@ -48,8 +48,8 @@ namespace SteamInventoryBoosterV2.Models.Mappings
                 Price = model.AtualPrice,
                 HighestPurchaseOrder = model.HighestPurchaseOrder,
                 LastVerification = model.LastVerification,
-                BuyPrice = model.BuyPrice != 0 ? model.BuyPrice : (double?)null,
-                SellPrice = model.SellPrice != 0 ? model.SellPrice : (double?)null,
+                BuyPrice = model.BuyPrice != 0 ? model.BuyPrice : (decimal?)null,
+                SellPrice = model.SellPrice != 0 ? model.SellPrice : (decimal?)null,
                 IconPath = model.IconPath
             };
         }

@@ -86,6 +86,12 @@ namespace SteamInventoryBoosterV2.Services
         {
             return BuyerPaysToSellerReceives(sellPrice) - buyPrice;
         }
+
+        public static decimal SellItemProfitPercentage(decimal buyPrice, decimal sellPrice)
+        {
+            // Profit/BuyPrice * 100
+            return SellItemProfit(buyPrice, sellPrice) / buyPrice * 100;
+        }
         internal static decimal GetDecimalWithTwoDecimals(decimal number)
         {
             // return only to 2 decimal places 

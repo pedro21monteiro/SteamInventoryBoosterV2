@@ -22,7 +22,7 @@ namespace SteamInventoryBoosterV2.Services
             _webScraper = webScraper ?? throw new ArgumentNullException(nameof(webScraper));
         }
 
-        public async Task<Result<SteamItem>> CreateSteamItemAsync(string link, double buyPrice, double sellPrice)
+        public async Task<Result<SteamItem>> CreateSteamItemAsync(string link, decimal buyPrice, decimal sellPrice)
         {
             try
             {

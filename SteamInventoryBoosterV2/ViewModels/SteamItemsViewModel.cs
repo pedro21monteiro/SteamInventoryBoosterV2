@@ -8,6 +8,7 @@ using SteamInventoryBoosterV2.ViewModels.Commands;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,6 +19,8 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
 {
     public class SteamItemsViewModel : BaseViewModel
     {
+        private readonly string _chromePath = @"C:\Program Files\Google\Chrome\Application\chrome.exe";
+
         public readonly ISteamItemService _steamItemService;
         public readonly IMessageBoxService _messageBoxService;
         public SteamItemsViewModel(ISteamItemService steamItemService, IMessageBoxService messageBoxService)
@@ -26,6 +29,7 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
             _messageBoxService = messageBoxService ?? throw new ArgumentNullException(nameof(messageBoxService));
 
             AddItemCommand = new RelayCommandAsync(CreateStemItemAsync, IsBuyAndSellPricesDefined);
+            GoToPageCommand = new RelayCommand(GoToStemItemPage, _ => true);
             FilteredSteamItensInformation = new ObservableCollection<SteamItemModel>();
             //FilteredSteamItensInformation.Add(new SteamItemModel { Name = "Item 1", BuyPrice = 2.5, SellPrice = 3.0, LastVerification = DateTime.Now, AtualPrice = 3.2, HighestPurchaseOrder = 2.8, IconPath = "/Assets/AppImage.png" });
 
@@ -34,6 +38,7 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
 
         // Commands
         public ICommand AddItemCommand { get; }
+        public ICommand GoToPageCommand { get; }
 
         public SteamItemModel SelectedItem { get; set; }
 
@@ -180,6 +185,31 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
             foreach (var item in getItemsResult.Value)
             {
                 FilteredSteamItensInformation.Add(SteamItemMapping.ToItemViewModel(item));
+            }
+        }
+
+        private void GoToStemItemPage(object? arg)
+        {
+            if (string.IsNullOrWhiteSpace(SelectedItem.Link))
+            {
+                _messageBoxService.ShowError("The selected item does not have a valid link.");
+                return;
+            }
+
+            try
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = _chromePath,
+                    Arguments = SelectedItem.Link,
+                    UseShellExecute = false
+                });
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Internal error while trying to open the link {SelectedItem.Link}: {ex.Message} \n{ex}");
+                _messageBoxService.ShowError($"Error opening link: {ex.Message}");
             }
         }
     }

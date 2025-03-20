@@ -230,18 +230,24 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
                 return;
             }
 
-            //Result<SteamItem> createSteamItemResult = await _steamItemService.CreateSteamItemAsync(LinkInput, buyPrice, sellPrice);
+            var confirmResult = _messageBoxService.ShowYesNo($"Are you sure you want to update the Buy Price to {buyPrice} and Sell Price to {sellPrice}?");
+            if (confirmResult != MessageBoxResult.Yes)
+            {
+                return;
+            }
 
-            //if (!createSteamItemResult.IsSuccess)
-            //{
-            //    _messageBoxService.ShowError($"Failed to create the item: {createSteamItemResult.Error!.Message}");
-            //    return;
-            //}
+            Result<SteamItem> editSteamItemResult = await _steamItemService.EditItemBuySellPricesAsync(SelectedItem.Id, buyPrice, sellPrice);
 
-            //_messageBoxService.ShowSuccess("Item created successfully!");
+            if (!editSteamItemResult.IsSuccess)
+            {
+                _messageBoxService.ShowError($"Failed to edit the item: {editSteamItemResult.Error!.Message}");
+                return;
+            }
 
-            //SteamItemModel steamItemModel = SteamItemMapping.ToItemViewModel(createSteamItemResult.Value!);
-            //FilteredSteamItensInformation.Add(steamItemModel);
+            SelectedItem.BuyPrice = buyPrice;
+            SelectedItem.SellPrice = sellPrice;
+
+            _messageBoxService.ShowSuccess("Item edited successfully!");
         }
     }
 }

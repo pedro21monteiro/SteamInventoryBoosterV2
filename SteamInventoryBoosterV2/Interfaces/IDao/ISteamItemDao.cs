@@ -12,5 +12,7 @@ namespace SteamInventoryBoosterV2.Interfaces.IDao
         Task<bool> ItemExistsByLinkAsync(string link);
         Task CreateAsync(SteamItem steamItem);
         Task<List<SteamItem>> GetAllAsync();
+        Task UpdateAsync(SteamItem item);
+        Task<SteamItem?> GetSteamItemByIdAsync(int id);
     }
 }

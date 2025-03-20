@@ -69,5 +69,30 @@ namespace SteamInventoryBoosterV2.Services
             }
         }
 
+        public async Task<Result<SteamItem>> EditItemBuySellPricesAsync(int itemId, decimal newBuyPrice, decimal newSellPrice)
+        {
+            try
+            {
+                var existingItem = await _steamItemDao.GetSteamItemByIdAsync(itemId);
+
+                if (existingItem == null)
+                {
+                    return Result<SteamItem>.Failure(Error.SteamItemNotFound);
+                }
+
+                existingItem.BuyPrice = newBuyPrice;
+                existingItem.SellPrice = newSellPrice;
+
+                await _steamItemDao.UpdateAsync(existingItem);
+
+                return Result<SteamItem>.Success(existingItem);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Internal error while trying to edit steam item buy and sell prices: {ex.Message} \n{ex}");
+                return Result<SteamItem>.Failure(Error.InternalError);
+            }
+        }
+
     }
 }

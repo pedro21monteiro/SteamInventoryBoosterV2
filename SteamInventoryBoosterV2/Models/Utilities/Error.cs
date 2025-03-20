@@ -21,15 +21,17 @@ namespace SteamInventoryBoosterV2.Models.Utilities
         {
             DuplicateItem,
             CookiesNotFound,
-            InternalError
+            InternalError,
+            SteamItemNotFound
         }
 
         // General Errors
         public static Error InternalError => new Error("An internal error occurred.", ErrorCode.InternalError);
 
-        // Erros Específicos para SteamItem
+        // Specific errors for SteamItem
         public static Error SteamItemAlreadyExists => new Error("SteamItem with this link already exists!", ErrorCode.DuplicateItem);
         public static Error CookiesNotFound => new Error("Cookies could not be found!", ErrorCode.CookiesNotFound);
+        public static Error SteamItemNotFound => new Error("SteamItem with that ID does not exist!", ErrorCode.SteamItemNotFound);
 
     }
 }

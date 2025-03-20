@@ -12,6 +12,7 @@ using System;
 using System.Configuration;
 using System.Data;
 using System.Diagnostics;
+using System.Globalization;
 using System.Windows;
 
 namespace SteamInventoryBoosterV2;
@@ -25,6 +26,8 @@ public partial class App : Application
 
     protected override void OnStartup(StartupEventArgs e)
     {
+        var culture = new CultureInfo("en-US");
+
         var serviceCollection = new ServiceCollection();
         ConfigureServices(serviceCollection);
         _serviceProvider = serviceCollection.BuildServiceProvider();

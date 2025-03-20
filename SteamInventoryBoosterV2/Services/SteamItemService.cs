@@ -43,9 +43,9 @@ namespace SteamInventoryBoosterV2.Services
                 steamItem.BuyPrice = buyPrice;
                 steamItem.SellPrice = sellPrice;
 
-                var createdItem = await _steamItemDao.CreateAsync(steamItem);
+                await _steamItemDao.CreateAsync(steamItem);
 
-                return Result<SteamItem>.Success(createdItem);
+                return Result<SteamItem>.Success(steamItem);
             }
             catch (Exception ex)
             {

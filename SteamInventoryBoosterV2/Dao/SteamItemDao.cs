@@ -24,11 +24,10 @@ namespace SteamInventoryBoosterV2.Dao
                 .AnyAsync(s => s.Link == link);
         }
 
-        public async Task<SteamItem> CreateAsync(SteamItem steamItem)
+        public async Task CreateAsync(SteamItem steamItem)
         {
             _context.SteamItems.Add(steamItem);
             await _context.SaveChangesAsync();
-            return steamItem;
         }
     }
 }

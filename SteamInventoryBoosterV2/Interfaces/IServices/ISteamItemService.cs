@@ -11,5 +11,6 @@ namespace SteamInventoryBoosterV2.Interfaces.IServices
     public interface ISteamItemService
     {
         Task<Result<SteamItem>> CreateSteamItemAsync(string link, decimal buyPrice, decimal sellPrice);
+        Task<Result<List<SteamItem>>> GetAllItemsAsync();
     }
 }

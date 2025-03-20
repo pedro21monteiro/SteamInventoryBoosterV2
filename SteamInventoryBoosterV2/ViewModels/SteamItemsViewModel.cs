@@ -28,6 +28,8 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
             AddItemCommand = new RelayCommandAsync(CreateStemItemAsync, IsBuyAndSellPricesDefined);
             FilteredSteamItensInformation = new ObservableCollection<SteamItemModel>();
             //FilteredSteamItensInformation.Add(new SteamItemModel { Name = "Item 1", BuyPrice = 2.5, SellPrice = 3.0, LastVerification = DateTime.Now, AtualPrice = 3.2, HighestPurchaseOrder = 2.8, IconPath = "/Assets/AppImage.png" });
+
+            LoadSteamItems();
         }
 
         // Commands
@@ -165,5 +167,20 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
             FilteredSteamItensInformation.Add(steamItemModel);
         }
 
+        public async void LoadSteamItems()
+        {
+            var getItemsResult = await _steamItemService.GetAllItemsAsync();
+            FilteredSteamItensInformation.Clear();
+
+            if (!getItemsResult.IsSuccess || getItemsResult.Value == null)
+            {
+                return;
+            }
+
+            foreach (var item in getItemsResult.Value)
+            {
+                FilteredSteamItensInformation.Add(SteamItemMapping.ToItemViewModel(item));
+            }
+        }
     }
 }

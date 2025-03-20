@@ -29,5 +29,10 @@ namespace SteamInventoryBoosterV2.Dao
             _context.SteamItems.Add(steamItem);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<List<SteamItem>> GetAllAsync()
+        {
+            return await _context.SteamItems.ToListAsync();
+        }
     }
 }

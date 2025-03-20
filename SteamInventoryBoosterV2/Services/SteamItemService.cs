@@ -49,8 +49,23 @@ namespace SteamInventoryBoosterV2.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Internal error while trying to create steam item for {link}: {ex.Message}");
+                Console.WriteLine($"Internal error while trying to create steam item for {link}: {ex.Message} \n{ex}");
                 return Result<SteamItem>.Failure(Error.InternalError);
+            }
+        }
+
+        public async Task<Result<List<SteamItem>>> GetAllItemsAsync()
+        {
+            try
+            {
+                var items = await _steamItemDao.GetAllAsync();
+
+                return Result<List<SteamItem>>.Success(items);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Internal error while trying to get list of steam items: {ex.Message} \n{ex}");
+                return Result<List<SteamItem>>.Failure(Error.InternalError);
             }
         }
 

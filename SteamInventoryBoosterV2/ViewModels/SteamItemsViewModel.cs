@@ -161,7 +161,7 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
 
             _messageBoxService.ShowSuccess("Item created successfully!");
 
-            SteamItemModel steamItemModel = SteamItemMapping.ToModel(createSteamItemResult.Value!);
+            SteamItemModel steamItemModel = SteamItemMapping.ToItemViewModel(createSteamItemResult.Value!);
             FilteredSteamItensInformation.Add(steamItemModel);
         }
 

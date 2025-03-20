@@ -1,4 +1,5 @@
-﻿using SteamInventoryBoosterV2.Models.Domain;
+﻿using OpenQA.Selenium;
+using SteamInventoryBoosterV2.Models.Domain;
 using SteamInventoryBoosterV2.Models.Dtos;
 using SteamInventoryBoosterV2.Services;
 using SteamInventoryBoosterV2.ViewModels.ItemViewModels;
@@ -48,21 +49,21 @@ namespace SteamInventoryBoosterV2.Models.Mappings
                 Price = model.AtualPrice,
                 HighestPurchaseOrder = model.HighestPurchaseOrder,
                 LastVerification = model.LastVerification,
-                BuyPrice = model.BuyPrice != 0 ? model.BuyPrice : (decimal?)null,
-                SellPrice = model.SellPrice != 0 ? model.SellPrice : (decimal?)null,
+                BuyPrice = model.BuyPrice,
+                SellPrice = model.SellPrice,
                 IconPath = model.IconPath
             };
         }
 
-        public static SteamItemModel ToModel(SteamItem entity)
+        public static SteamItemModel ToItemViewModel(SteamItem entity)
         {
             return new SteamItemModel
             {
                 Id = entity.Id,
                 Link = entity.Link,
                 Name = entity.Name,
-                BuyPrice = entity.BuyPrice ?? 0,
-                SellPrice = entity.SellPrice ?? 0,
+                BuyPrice = entity.BuyPrice,
+                SellPrice = entity.SellPrice,
                 AtualPrice = entity.Price,
                 HighestPurchaseOrder = entity.HighestPurchaseOrder,
                 LastVerification = entity.LastVerification,

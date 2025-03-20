@@ -89,8 +89,8 @@ namespace SteamInventoryBoosterV2.Services
 
         public static decimal SellItemProfitPercentage(decimal buyPrice, decimal sellPrice)
         {
-            // Profit/BuyPrice * 100
-            return SellItemProfit(buyPrice, sellPrice) / buyPrice * 100;
+            // Profit/BuyPrice * 100 and BuyPrice must be higger than 0
+            return buyPrice > 0 ? SellItemProfit(buyPrice, sellPrice) / buyPrice * 100 : 0;
         }
         internal static decimal GetDecimalWithTwoDecimals(decimal number)
         {

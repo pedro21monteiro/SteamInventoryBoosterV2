@@ -30,7 +30,7 @@ namespace SteamInventoryBoosterV2.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<decimal?>("BuyPrice")
+                    b.Property<decimal>("BuyPrice")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("HighestPurchaseOrder")
@@ -54,7 +54,7 @@ namespace SteamInventoryBoosterV2.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal?>("SellPrice")
+                    b.Property<decimal>("SellPrice")
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");

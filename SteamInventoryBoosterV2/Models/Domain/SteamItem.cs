@@ -16,8 +16,8 @@ namespace SteamInventoryBoosterV2.Models.Domain
         public decimal Price { get; set; }
         public decimal HighestPurchaseOrder { get; set; }
         public DateTime LastVerification { get; set; }
-        public decimal? BuyPrice { get; set; }
-        public decimal? SellPrice { get; set; }
+        public decimal BuyPrice { get; set; }
+        public decimal SellPrice { get; set; }
         public string IconPath { get; set; } = string.Empty;
     }
 }

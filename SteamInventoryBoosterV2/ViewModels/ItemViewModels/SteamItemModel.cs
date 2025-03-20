@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SteamInventoryBoosterV2.Services;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -51,6 +52,8 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
             {
                 _buyPrice = value;
                 OnPropertyChanged(nameof(BuyPrice));
+                OnPropertyChanged(nameof(SellProfit));
+                OnPropertyChanged(nameof(ProfitPercentage));
             }
         }
 
@@ -62,30 +65,14 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
             {
                 _sellPrice = value;
                 OnPropertyChanged(nameof(SellPrice));
-            }
-        }
-
-        private decimal _sellProfit;
-        public decimal SellProfit
-        {
-            get => _sellProfit;
-            set
-            {
-                _sellProfit = value;
                 OnPropertyChanged(nameof(SellProfit));
-            }
-        }
-
-        private decimal _profitPercentage;
-        public decimal ProfitPercentage
-        {
-            get => _profitPercentage;
-            set
-            {
-                _profitPercentage = value;
                 OnPropertyChanged(nameof(ProfitPercentage));
             }
         }
+
+        public decimal SellProfit => Calculus.SellItemProfit(BuyPrice,SellPrice);
+
+        public decimal ProfitPercentage => Calculus.SellItemProfitPercentage(BuyPrice, SellPrice);
 
         private DateTime _lastVerification;
         public DateTime LastVerification

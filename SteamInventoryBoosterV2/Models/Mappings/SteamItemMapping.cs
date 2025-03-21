@@ -70,5 +70,21 @@ namespace SteamInventoryBoosterV2.Models.Mappings
                 IconPath = entity.IconPath
             };
         }
+
+        public static void UpdateEntityInfo(SteamItem existingItem, SteamItemInfoDto dto)
+        {
+            existingItem.Name = dto.Name;
+            existingItem.Price = dto.Price;
+            existingItem.HighestPurchaseOrder = dto.HighestPurchaseOrder;
+            existingItem.LastVerification = dto.LastVerification;
+        }
+
+        public static void UpdateItemViewModelInfo(SteamItemModel model, SteamItem entity)
+        {
+            model.Name = entity.Name;
+            model.AtualPrice = entity.Price;
+            model.HighestPurchaseOrder = entity.HighestPurchaseOrder;
+            model.LastVerification = entity.LastVerification;
+        }
     }
 }

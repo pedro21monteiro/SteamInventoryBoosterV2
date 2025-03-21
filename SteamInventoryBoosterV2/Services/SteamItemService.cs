@@ -34,12 +34,12 @@ namespace SteamInventoryBoosterV2.Services
 
                 var colectItemInfoResult = await _webScraper.CollectBasicSteamItemInformation(link);
 
-                if (!colectItemInfoResult.IsSuccess || colectItemInfoResult.Value == null)
+                if (!colectItemInfoResult.IsSuccess)
                 {
-                    return Result<SteamItem>.Failure(colectItemInfoResult.Error ?? Error.InternalError);
+                    return Result<SteamItem>.Failure(colectItemInfoResult.Error!);
                 }
 
-                SteamItem steamItem = SteamItemMapping.ToEntity(colectItemInfoResult.Value);
+                SteamItem steamItem = SteamItemMapping.ToEntity(colectItemInfoResult.Value!);
                 steamItem.BuyPrice = buyPrice;
                 steamItem.SellPrice = sellPrice;
 
@@ -112,6 +112,38 @@ namespace SteamInventoryBoosterV2.Services
             catch (Exception ex)
             {
                 Console.WriteLine($"Internal error while trying to delete steam item: {ex.Message} \n{ex}");
+                return Result<SteamItem>.Failure(Error.InternalError);
+            }
+        }
+
+        public async Task<Result<SteamItem>> UpdateSteamItemInfoAsync(int itemId)
+        {
+            try
+            {
+                var existingItem = await _steamItemDao.GetSteamItemByIdAsync(itemId);
+
+                if (existingItem == null)
+                {
+                    return Result<SteamItem>.Failure(Error.SteamItemNotFound);
+                }
+
+                var collectItemInfoResult = await _webScraper.CollectBasicSteamItemInformation(existingItem.Link);
+
+                if (!collectItemInfoResult.IsSuccess)
+                {
+                    return Result<SteamItem>.Failure(collectItemInfoResult.Error!);
+                }
+
+                SteamItemMapping.UpdateEntityInfo(existingItem, collectItemInfoResult.Value!);
+
+                await _steamItemDao.UpdateAsync(existingItem);
+
+                return Result<SteamItem>.Success(existingItem);
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Internal error while trying to update steam item info: {ex.Message} \n{ex}");
                 return Result<SteamItem>.Failure(Error.InternalError);
             }
         }

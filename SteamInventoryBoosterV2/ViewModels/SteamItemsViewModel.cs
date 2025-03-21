@@ -32,6 +32,7 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
             GoToPageCommand = new RelayCommand(GoToStemItemPage, _ => true);
             EditItemCommand = new RelayCommandAsync(EditSteamItemAsync, IsBuyAndSellPricesDefined);
             RemoveItemCommand = new RelayCommandAsync(RemoveSteamItemAsync, _ => true);
+            UpdateItemCommand = new RelayCommandAsync(UpdateSteamItemAsync, _ => true);
 
             FilteredSteamItensInformation = new ObservableCollection<SteamItemModel>();
 
@@ -43,6 +44,7 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
         public ICommand GoToPageCommand { get; }
         public ICommand EditItemCommand { get; }
         public ICommand RemoveItemCommand { get; }
+        public ICommand UpdateItemCommand { get; }
 
         public SteamItemModel SelectedItem { get; set; }
 
@@ -226,6 +228,7 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
 
         private async Task EditSteamItemAsync(object parameter)
         {
+            SteamItemModel currentItem = SelectedItem;
             if (!decimal.TryParse(BuyPriceInput, out decimal buyPrice) || !decimal.TryParse(SellPriceInput, out decimal sellPrice))
             {
                 _messageBoxService.ShowWarning("Please enter valid prices.");
@@ -238,7 +241,7 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
                 return;
             }
 
-            Result<SteamItem> editSteamItemResult = await _steamItemService.EditItemBuySellPricesAsync(SelectedItem.Id, buyPrice, sellPrice);
+            Result<SteamItem> editSteamItemResult = await _steamItemService.EditItemBuySellPricesAsync(currentItem.Id, buyPrice, sellPrice);
 
             if (!editSteamItemResult.IsSuccess)
             {
@@ -246,21 +249,22 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
                 return;
             }
 
-            SelectedItem.BuyPrice = buyPrice;
-            SelectedItem.SellPrice = sellPrice;
+            currentItem.BuyPrice = buyPrice;
+            currentItem.SellPrice = sellPrice;
 
             _messageBoxService.ShowSuccess("Item edited successfully!");
         }
 
         private async Task RemoveSteamItemAsync(object parameter)
         {
+            SteamItemModel currentItem = SelectedItem;
             var confirmResult = _messageBoxService.ShowYesNo($"Are you sure you want to delete the steam item {SelectedItem.Name}?");
             if (confirmResult != MessageBoxResult.Yes)
             {
                 return;
             }
 
-            Result deleteSteamItemResult = await _steamItemService.DeleteSteamItemAsync(SelectedItem.Id);
+            Result deleteSteamItemResult = await _steamItemService.DeleteSteamItemAsync(currentItem.Id);
 
             if (!deleteSteamItemResult.IsSuccess)
             {
@@ -268,9 +272,25 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
                 return;
             }
 
-            FilteredSteamItensInformation.Remove(SelectedItem);
+            FilteredSteamItensInformation.Remove(currentItem);
 
             _messageBoxService.ShowSuccess("Item deleted successfully!");
+        }
+
+        private async Task UpdateSteamItemAsync(object parameter)
+        {
+            SteamItemModel currentItem = SelectedItem;
+            Result<SteamItem> updateSteamItemResult = await _steamItemService.UpdateSteamItemInfoAsync(currentItem.Id);
+
+            if (!updateSteamItemResult.IsSuccess)
+            {
+                _messageBoxService.ShowError($"Failed to update the item info: {updateSteamItemResult.Error!.Message}");
+                return;
+            }
+
+            SteamItemMapping.UpdateItemViewModelInfo(currentItem, updateSteamItemResult.Value!);
+
+            _messageBoxService.ShowSuccess("Item updated successfully!");
         }
     }
 }

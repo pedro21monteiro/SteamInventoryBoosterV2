@@ -89,12 +89,12 @@ namespace SteamInventoryBoosterV2.Services
                 steamItemInfoDto.Name = elementName.Text;
 
                 // Extract Actual Price
-                IWebElement elementAtualPrice = wait.Until(driver =>
+                IWebElement elementPrice = wait.Until(driver =>
                 {
                     return driver.FindElement(By.CssSelector("#market_commodity_forsale > span:nth-child(2)"));
                 });
-                string atualPriceString = elementAtualPrice.Text.Replace("€", "");
-                steamItemInfoDto.Price = decimal.Parse(atualPriceString);
+                string priceString = elementPrice.Text.Replace("€", "");
+                steamItemInfoDto.Price = decimal.Parse(priceString);
 
                 // Extract Highest Purchase Order
                 IWebElement elementHighestPurchaseOrder = wait.Until(driver =>

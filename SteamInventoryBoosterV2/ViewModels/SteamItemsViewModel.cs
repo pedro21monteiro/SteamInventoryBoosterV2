@@ -33,6 +33,7 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
             EditItemCommand = new RelayCommandAsync(EditSteamItemAsync, IsBuyAndSellPricesDefined);
             RemoveItemCommand = new RelayCommandAsync(RemoveSteamItemAsync, _ => true);
             UpdateItemCommand = new RelayCommandAsync(UpdateSteamItemAsync, _ => true);
+            SortCommand = new RelayCommand(SortItems);
 
             FilteredSteamItensInformation = new ObservableCollection<SteamItemModel>();
 
@@ -45,6 +46,7 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
         public ICommand EditItemCommand { get; }
         public ICommand RemoveItemCommand { get; }
         public ICommand UpdateItemCommand { get; }
+        public ICommand SortCommand { get; }
 
         public SteamItemModel SelectedItem { get; set; }
 
@@ -292,5 +294,132 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
 
             _messageBoxService.ShowSuccess("Item updated successfully!");
         }
+
+        private string _currentSortProperty = String.Empty;
+        private bool _isAscending = true;
+        private void SortItems(object parameter)
+        {
+            var parameterString = parameter.ToString();
+
+            if (parameterString == null)
+            {
+                Console.WriteLine(Error.SortColumnNotDefined.Message);
+                _messageBoxService.ShowError(Error.InternalError.Message);
+                return;
+            }
+
+            if (_currentSortProperty == parameterString)
+            {
+                _isAscending = !_isAscending;
+            }
+            else
+            {
+                _currentSortProperty = parameterString;
+                _isAscending = true;
+            }
+
+            switch (_currentSortProperty)
+            {
+                case "ColumnName":
+                    SortByName();
+                    break;
+                case "ColumnBuyPrice":
+                    SortByBuyPrice();
+                    break;
+                case "ColumnSellPrice":
+                    SortBySellPrice();
+                    break;
+                case "ColumnSellProfit":
+                    SortBySellProfit();
+                    break;
+                case "ColumnProfitPercentage":
+                    SortByProfitPercentage();
+                    break;
+                case "ColumnLastVerification":
+                    SortByLastVerification();
+                    break;
+                case "ColumnPrice":
+                    SortByPrice();
+                    break;
+                case "ColumnHighestPurchaseOrder":
+                    SortByHighestPurchaseOrder();
+                    break;
+                default:
+                    Console.WriteLine(Error.SortColumnNotDefined.Message);
+                    _messageBoxService.ShowError(Error.SortColumnNotDefined.Message);
+                    break;
+            }
+        }
+
+        private void SortByName()
+        {
+            var sortedList = _isAscending
+                ? FilteredSteamItensInformation.OrderBy(item => item.Name).ToList()
+                : FilteredSteamItensInformation.OrderByDescending(item => item.Name).ToList();
+
+            FilteredSteamItensInformation = new ObservableCollection<SteamItemModel>(sortedList);
+        }
+        private void SortByBuyPrice()
+        {
+            var sortedList = _isAscending
+                ? FilteredSteamItensInformation.OrderBy(item => item.BuyPrice).ToList()
+                : FilteredSteamItensInformation.OrderByDescending(item => item.BuyPrice).ToList();
+
+            FilteredSteamItensInformation = new ObservableCollection<SteamItemModel>(sortedList);
+        }
+
+        private void SortBySellPrice()
+        {
+            var sortedList = _isAscending
+                ? FilteredSteamItensInformation.OrderBy(item => item.SellPrice).ToList()
+                : FilteredSteamItensInformation.OrderByDescending(item => item.SellPrice).ToList();
+
+            FilteredSteamItensInformation = new ObservableCollection<SteamItemModel>(sortedList);
+        }
+        private void SortBySellProfit()
+        {
+            var sortedList = _isAscending
+                ? FilteredSteamItensInformation.OrderBy(item => item.SellProfit).ToList()
+                : FilteredSteamItensInformation.OrderByDescending(item => item.SellProfit).ToList();
+
+            FilteredSteamItensInformation = new ObservableCollection<SteamItemModel>(sortedList);
+        }
+
+        private void SortByProfitPercentage()
+        {
+            var sortedList = _isAscending
+                ? FilteredSteamItensInformation.OrderBy(item => item.ProfitPercentage).ToList()
+                : FilteredSteamItensInformation.OrderByDescending(item => item.ProfitPercentage).ToList();
+
+            FilteredSteamItensInformation = new ObservableCollection<SteamItemModel>(sortedList);
+        }
+
+        private void SortByLastVerification()
+        {
+            var sortedList = _isAscending
+                ? FilteredSteamItensInformation.OrderBy(item => item.LastVerification).ToList()
+                : FilteredSteamItensInformation.OrderByDescending(item => item.LastVerification).ToList();
+
+            FilteredSteamItensInformation = new ObservableCollection<SteamItemModel>(sortedList);
+        }
+
+        private void SortByPrice()
+        {
+            var sortedList = _isAscending
+                ? FilteredSteamItensInformation.OrderBy(item => item.Price).ToList()
+                : FilteredSteamItensInformation.OrderByDescending(item => item.Price).ToList();
+
+            FilteredSteamItensInformation = new ObservableCollection<SteamItemModel>(sortedList);
+        }
+
+        private void SortByHighestPurchaseOrder()
+        {
+            var sortedList = _isAscending
+                ? FilteredSteamItensInformation.OrderBy(item => item.HighestPurchaseOrder).ToList()
+                : FilteredSteamItensInformation.OrderByDescending(item => item.HighestPurchaseOrder).ToList();
+
+            FilteredSteamItensInformation = new ObservableCollection<SteamItemModel>(sortedList);
+        }
+
     }
 }

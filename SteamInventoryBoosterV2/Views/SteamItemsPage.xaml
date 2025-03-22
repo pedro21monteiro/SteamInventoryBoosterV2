@@ -74,42 +74,42 @@
                     </GridViewColumn>
                     <GridViewColumn Width="300" DisplayMemberBinding="{Binding Name}">
                         <GridViewColumn.Header>
-                            <GridViewColumnHeader Content="Name"/>
+                            <GridViewColumnHeader Content="Name" Command="{Binding SortCommand}" CommandParameter="ColumnName"/>
                         </GridViewColumn.Header>
                     </GridViewColumn>
                     <GridViewColumn Width="100" DisplayMemberBinding="{Binding BuyPrice, StringFormat='{}{0:F2}€'}">
                         <GridViewColumn.Header>
-                            <GridViewColumnHeader Content="Buy Price"/>
+                            <GridViewColumnHeader Content="Buy Price" Command="{Binding SortCommand}" CommandParameter="ColumnBuyPrice"/>
                         </GridViewColumn.Header>
                     </GridViewColumn>
                     <GridViewColumn Width="100" DisplayMemberBinding="{Binding SellPrice, StringFormat='{}{0:F2}€'}">
                         <GridViewColumn.Header>
-                            <GridViewColumnHeader Content="Sell Price"/>
+                            <GridViewColumnHeader Content="Sell Price" Command="{Binding SortCommand}" CommandParameter="ColumnSellPrice"/>
                         </GridViewColumn.Header>
                     </GridViewColumn>
                     <GridViewColumn Width="100" DisplayMemberBinding="{Binding SellProfit, StringFormat='{}{0:F2}€'}">
                         <GridViewColumn.Header>
-                            <GridViewColumnHeader Content="Profit"/>
+                            <GridViewColumnHeader Content="Profit" Command="{Binding SortCommand}" CommandParameter="ColumnSellProfit"/>
                         </GridViewColumn.Header>
                     </GridViewColumn>
                     <GridViewColumn Width="150" DisplayMemberBinding="{Binding ProfitPercentage, StringFormat='{}{0:F2}%'}">
                         <GridViewColumn.Header>
-                            <GridViewColumnHeader Content="Profit Percentage"/>
+                            <GridViewColumnHeader Content="Profit Percentage" Command="{Binding SortCommand}" CommandParameter="ColumnProfitPercentage"/>
                         </GridViewColumn.Header>
                     </GridViewColumn>
-                    <GridViewColumn Width="150" DisplayMemberBinding="{Binding LastVerification}">
+                    <GridViewColumn Width="150" DisplayMemberBinding="{Binding LastVerification, StringFormat='{}{0:dd/MM/yyyy HH:mm:ss}'}">
                         <GridViewColumn.Header>
-                            <GridViewColumnHeader Content="Last Verification"/>
+                            <GridViewColumnHeader Content="Last Verification" Command="{Binding SortCommand}" CommandParameter="ColumnLastVerification"/>
                         </GridViewColumn.Header>
                     </GridViewColumn>
-                    <GridViewColumn Width="100" DisplayMemberBinding="{Binding AtualPrice, StringFormat='{}{0:F2}€'}">
+                    <GridViewColumn Width="100" DisplayMemberBinding="{Binding Price, StringFormat='{}{0:F2}€'}">
                         <GridViewColumn.Header>
-                            <GridViewColumnHeader Content="Atual Price"/>
+                            <GridViewColumnHeader Content="Price" Command="{Binding SortCommand}" CommandParameter="ColumnPrice"/>
                         </GridViewColumn.Header>
                     </GridViewColumn>
                     <GridViewColumn Width="150" DisplayMemberBinding="{Binding HighestPurchaseOrder, StringFormat='{}{0:F2}€'}">
                         <GridViewColumn.Header>
-                            <GridViewColumnHeader Content="Highest Purchase Order"/>
+                            <GridViewColumnHeader Content="Highest Purchase Order" Command="{Binding SortCommand}" CommandParameter="ColumnHighestPurchaseOrder"/>
                         </GridViewColumn.Header>
                     </GridViewColumn>
                 </GridView>

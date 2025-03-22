@@ -22,7 +22,8 @@ namespace SteamInventoryBoosterV2.Models.Utilities
             DuplicateItem,
             CookiesNotFound,
             InternalError,
-            SteamItemNotFound
+            SteamItemNotFound,
+            InvalidParameter
         }
 
         // General Errors
@@ -32,6 +33,7 @@ namespace SteamInventoryBoosterV2.Models.Utilities
         public static Error SteamItemAlreadyExists => new Error("SteamItem with this link already exists!", ErrorCode.DuplicateItem);
         public static Error CookiesNotFound => new Error("Cookies could not be found!", ErrorCode.CookiesNotFound);
         public static Error SteamItemNotFound => new Error("SteamItem with that ID does not exist!", ErrorCode.SteamItemNotFound);
+        public static Error SortColumnNotDefined => new Error("The column name for sorting is not defined!", ErrorCode.InvalidParameter);
 
     }
 }

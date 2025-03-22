@@ -46,7 +46,7 @@ namespace SteamInventoryBoosterV2.Models.Mappings
                 Id = model.Id,
                 Link = model.Link,
                 Name = model.Name,
-                Price = model.AtualPrice,
+                Price = model.Price,
                 HighestPurchaseOrder = model.HighestPurchaseOrder,
                 LastVerification = model.LastVerification,
                 BuyPrice = model.BuyPrice,
@@ -64,7 +64,7 @@ namespace SteamInventoryBoosterV2.Models.Mappings
                 Name = entity.Name,
                 BuyPrice = entity.BuyPrice,
                 SellPrice = entity.SellPrice,
-                AtualPrice = entity.Price,
+                Price = entity.Price,
                 HighestPurchaseOrder = entity.HighestPurchaseOrder,
                 LastVerification = entity.LastVerification,
                 IconPath = entity.IconPath
@@ -82,7 +82,7 @@ namespace SteamInventoryBoosterV2.Models.Mappings
         public static void UpdateItemViewModelInfo(SteamItemModel model, SteamItem entity)
         {
             model.Name = entity.Name;
-            model.AtualPrice = entity.Price;
+            model.Price = entity.Price;
             model.HighestPurchaseOrder = entity.HighestPurchaseOrder;
             model.LastVerification = entity.LastVerification;
         }

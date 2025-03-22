@@ -85,14 +85,14 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
             }
         }
 
-        private decimal _atualPrice;
-        public decimal AtualPrice
+        private decimal _price;
+        public decimal Price
         {
-            get => _atualPrice;
+            get => _price;
             set
             {
-                _atualPrice = value;
-                OnPropertyChanged(nameof(AtualPrice));
+                _price = value;
+                OnPropertyChanged(nameof(Price));
             }
         }
 

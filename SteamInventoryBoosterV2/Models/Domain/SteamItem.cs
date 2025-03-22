@@ -18,6 +18,6 @@ namespace SteamInventoryBoosterV2.Models.Domain
         public DateTime LastVerification { get; set; }
         public decimal BuyPrice { get; set; }
         public decimal SellPrice { get; set; }
-        public string IconPath { get; set; } = string.Empty;
+        public string IconUrl { get; set; } = string.Empty;
     }
 }

@@ -36,7 +36,7 @@ namespace SteamInventoryBoosterV2.Migrations
                     b.Property<decimal>("HighestPurchaseOrder")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("IconPath")
+                    b.Property<string>("IconUrl")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

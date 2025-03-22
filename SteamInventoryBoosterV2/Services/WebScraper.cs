@@ -104,6 +104,14 @@ namespace SteamInventoryBoosterV2.Services
                 string highestPurchaseOrderString = elementHighestPurchaseOrder.Text.Replace("€", "");
                 steamItemInfoDto.HighestPurchaseOrder = decimal.Parse(highestPurchaseOrderString);
 
+                // Extract item image link
+                IWebElement elementImageLink = wait.Until(driver =>
+                {
+                    return driver.FindElement(By.CssSelector("#mainContents > div.market_page_fullwidth.market_listing_firstsection > div > div.market_listing_largeimage > img"));
+                });
+                string elementImageUrlString = elementImageLink.GetAttribute("src");
+                steamItemInfoDto.IconUrl = elementImageUrlString;
+
                 steamItemInfoDto.LastVerification = DateTime.Now;
 
                 return Result<SteamItemInfoDto>.Success(steamItemInfoDto);

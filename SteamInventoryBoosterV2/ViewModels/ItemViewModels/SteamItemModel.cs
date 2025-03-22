@@ -106,20 +106,16 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
                 OnPropertyChanged(nameof(HighestPurchaseOrder));
             }
         }
-        private string _iconPath = String.Empty;
-        public string IconPath
+        private string _iconUrl = String.Empty;
+        public string IconUrl
         {
-            get => _iconPath;
+            get => _iconUrl;
             set
             {
-                _iconPath = value;
-                OnPropertyChanged(nameof(IconPath));
-                OnPropertyChanged(nameof(ItemIcon));
+                _iconUrl = value;
+                OnPropertyChanged(nameof(IconUrl));
             }
         }
-
-        public BitmapImage ItemIcon => new BitmapImage(new Uri(IconPath, UriKind.RelativeOrAbsolute));
-
 
         public event PropertyChangedEventHandler? PropertyChanged;
         protected void OnPropertyChanged(string propertyName)

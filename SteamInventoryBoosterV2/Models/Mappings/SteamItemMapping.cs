@@ -21,7 +21,7 @@ namespace SteamInventoryBoosterV2.Models.Mappings
                 Name = dto.Name,
                 Price = dto.Price,
                 HighestPurchaseOrder = dto.HighestPurchaseOrder,
-                IconPath = dto.IconUrl,
+                IconUrl = dto.IconUrl,
                 LastVerification = dto.LastVerification
             };
         }
@@ -34,7 +34,7 @@ namespace SteamInventoryBoosterV2.Models.Mappings
                 Name = entity.Name,
                 Price = entity.Price,
                 HighestPurchaseOrder = entity.HighestPurchaseOrder,
-                IconUrl = entity.IconPath,
+                IconUrl = entity.IconUrl,
                 LastVerification = entity.LastVerification
             };
         }
@@ -51,7 +51,7 @@ namespace SteamInventoryBoosterV2.Models.Mappings
                 LastVerification = model.LastVerification,
                 BuyPrice = model.BuyPrice,
                 SellPrice = model.SellPrice,
-                IconPath = model.IconPath
+                IconUrl = model.IconUrl
             };
         }
 
@@ -67,7 +67,7 @@ namespace SteamInventoryBoosterV2.Models.Mappings
                 Price = entity.Price,
                 HighestPurchaseOrder = entity.HighestPurchaseOrder,
                 LastVerification = entity.LastVerification,
-                IconPath = entity.IconPath
+                IconUrl = entity.IconUrl
             };
         }
 
@@ -77,6 +77,7 @@ namespace SteamInventoryBoosterV2.Models.Mappings
             existingItem.Price = dto.Price;
             existingItem.HighestPurchaseOrder = dto.HighestPurchaseOrder;
             existingItem.LastVerification = dto.LastVerification;
+            existingItem.IconUrl = dto.IconUrl;
         }
 
         public static void UpdateItemViewModelInfo(SteamItemModel model, SteamItem entity)
@@ -85,6 +86,7 @@ namespace SteamInventoryBoosterV2.Models.Mappings
             model.Price = entity.Price;
             model.HighestPurchaseOrder = entity.HighestPurchaseOrder;
             model.LastVerification = entity.LastVerification;
+            model.IconUrl = entity.IconUrl;
         }
     }
 }

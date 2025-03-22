@@ -53,7 +53,7 @@
                 <TextBlock Text="Item Name" FontWeight="Bold" />
                 <TextBox x:Name="SearchTextBox" Text="{Binding SearchTermInput, UpdateSourceTrigger=PropertyChanged}" />
             </StackPanel>
-            <Button x:Name="SearchButton" Content="Search" Command="{Binding SearchCommand}" Width="100"/>
+            <Button x:Name="SearchButton" Content="Search" Command="{Binding SearchByNameCommand}" Width="100"/>
         </StackPanel>
 
         <ListView Grid.Row="2" x:Name="ItemsListView" ItemsSource="{Binding FilteredSteamItensInformation}"  

@@ -34,7 +34,9 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
             RemoveItemCommand = new RelayCommandAsync(RemoveSteamItemAsync, _ => true);
             UpdateItemCommand = new RelayCommandAsync(UpdateSteamItemAsync, _ => true);
             SortCommand = new RelayCommand(SortItems);
+            SearchByNameCommand = new RelayCommand(FilterSteamItemsByName, _ => true);
 
+            _allSteamItensInformation = new ObservableCollection<SteamItemModel>();
             FilteredSteamItensInformation = new ObservableCollection<SteamItemModel>();
 
             LoadSteamItems();
@@ -47,8 +49,11 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
         public ICommand RemoveItemCommand { get; }
         public ICommand UpdateItemCommand { get; }
         public ICommand SortCommand { get; }
+        public ICommand SearchByNameCommand { get; }
 
         public SteamItemModel SelectedItem { get; set; }
+
+        private ObservableCollection<SteamItemModel> _allSteamItensInformation { get; set; }
 
         private ObservableCollection<SteamItemModel> _filteredSteamItensInformation;
         public ObservableCollection<SteamItemModel> FilteredSteamItensInformation
@@ -118,6 +123,17 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
             private set => SetProperty(ref _profitPercentageInput, value);
         }
 
+        private string _searchTermInput;
+        public string SearchTermInput
+        {
+            get => _searchTermInput;
+            set
+            {
+                _searchTermInput = value;
+                OnPropertyChanged(nameof(SearchTermInput));
+            }
+        }
+
         private bool CanAddSteamItem(object parameter)
         {
             return IsBuyAndSellPricesDefined(parameter)
@@ -173,7 +189,7 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
                 return;
             }
 
-            Result<SteamItem> createSteamItemResult = await _steamItemService.CreateSteamItemAsync(LinkInput, buyPrice, sellPrice);
+            Result<SteamItem> createSteamItemResult = await _steamItemService.CreateSteamItemAsync(LinkInput.Trim(), buyPrice, sellPrice);
 
             if (!createSteamItemResult.IsSuccess)
             {
@@ -181,10 +197,11 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
                 return;                
             }
 
-            _messageBoxService.ShowSuccess("Item created successfully!");
-
             SteamItemModel steamItemModel = SteamItemMapping.ToItemViewModel(createSteamItemResult.Value!);
             FilteredSteamItensInformation.Add(steamItemModel);
+            _allSteamItensInformation.Add(steamItemModel);
+
+            _messageBoxService.ShowSuccess("Item created successfully!");
         }
 
         public async void LoadSteamItems()
@@ -199,8 +216,10 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
 
             foreach (var item in getItemsResult.Value)
             {
-                FilteredSteamItensInformation.Add(SteamItemMapping.ToItemViewModel(item));
+                _allSteamItensInformation.Add(SteamItemMapping.ToItemViewModel(item));
             }
+
+            FilteredSteamItensInformation = _allSteamItensInformation;
         }
 
         private void GoToStemItemPage(object? arg)
@@ -254,6 +273,8 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
             currentItem.BuyPrice = buyPrice;
             currentItem.SellPrice = sellPrice;
 
+            UpdateItemInAllSteamItensInformationList(currentItem);
+
             _messageBoxService.ShowSuccess("Item edited successfully!");
         }
 
@@ -275,6 +296,7 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
             }
 
             FilteredSteamItensInformation.Remove(currentItem);
+            _allSteamItensInformation.Remove(currentItem);
 
             _messageBoxService.ShowSuccess("Item deleted successfully!");
         }
@@ -291,6 +313,8 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
             }
 
             SteamItemMapping.UpdateItemViewModelInfo(currentItem, updateSteamItemResult.Value!);
+
+            UpdateItemInAllSteamItensInformationList(currentItem);
 
             _messageBoxService.ShowSuccess("Item updated successfully!");
         }
@@ -419,6 +443,29 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
                 : FilteredSteamItensInformation.OrderByDescending(item => item.HighestPurchaseOrder).ToList();
 
             FilteredSteamItensInformation = new ObservableCollection<SteamItemModel>(sortedList);
+        }
+
+        private void FilterSteamItemsByName(object? obj)
+        {
+            if (string.IsNullOrEmpty(SearchTermInput))
+            {
+                FilteredSteamItensInformation = _allSteamItensInformation;
+            }
+            else
+            {
+                var filteredBuySellsInfo = _allSteamItensInformation
+                    .Where(i => i.Name.Contains(SearchTermInput, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+
+                FilteredSteamItensInformation = new ObservableCollection<SteamItemModel>(filteredBuySellsInfo);
+            }
+        }
+
+        private void UpdateItemInAllSteamItensInformationList(SteamItemModel updatedItem)
+        {
+            var originalItem = _allSteamItensInformation.FirstOrDefault(i => i.Id == updatedItem.Id);
+
+            originalItem = updatedItem;
         }
 
     }

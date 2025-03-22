@@ -35,6 +35,7 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
             UpdateItemCommand = new RelayCommandAsync(UpdateSteamItemAsync, _ => true);
             SortCommand = new RelayCommand(SortItems);
             SearchByNameCommand = new RelayCommand(FilterSteamItemsByName, _ => true);
+            RefreshPageCommand = new RelayCommand(RefreshSteamItemsInformation, _ => true);
 
             _allSteamItensInformation = new ObservableCollection<SteamItemModel>();
             FilteredSteamItensInformation = new ObservableCollection<SteamItemModel>();
@@ -50,6 +51,7 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
         public ICommand UpdateItemCommand { get; }
         public ICommand SortCommand { get; }
         public ICommand SearchByNameCommand { get; }
+        public ICommand RefreshPageCommand { get; }
 
         public SteamItemModel SelectedItem { get; set; }
 
@@ -201,13 +203,17 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
             FilteredSteamItensInformation.Add(steamItemModel);
             _allSteamItensInformation.Add(steamItemModel);
 
+            ClearAddItemInputParameters();
+
             _messageBoxService.ShowSuccess("Item created successfully!");
         }
 
         public async void LoadSteamItems()
         {
-            var getItemsResult = await _steamItemService.GetAllItemsAsync();
             FilteredSteamItensInformation.Clear();
+            _allSteamItensInformation.Clear();
+
+            var getItemsResult = await _steamItemService.GetAllItemsAsync();
 
             if (!getItemsResult.IsSuccess || getItemsResult.Value == null)
             {
@@ -468,5 +474,17 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
             originalItem = updatedItem;
         }
 
+        private void ClearAddItemInputParameters()
+        {
+            LinkInput = "";
+            BuyPriceInput = "";
+            SellPriceInput = "";
+        }
+
+        private void RefreshSteamItemsInformation(object parameter)
+        {
+            LoadSteamItems();
+            _messageBoxService.ShowSuccess("Page successfully refreshed!");
+        }
     }
 }

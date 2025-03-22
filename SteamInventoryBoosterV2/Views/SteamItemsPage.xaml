@@ -48,13 +48,22 @@
             </StackPanel>
         </StackPanel>
 
-        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10">
-            <StackPanel Width="300" Margin="0,0,10,0">
-                <TextBlock Text="Item Name" FontWeight="Bold" />
-                <TextBox x:Name="SearchTextBox" Text="{Binding SearchTermInput, UpdateSourceTrigger=PropertyChanged}" />
+        <Grid Grid.Row="1" Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Orientation="Horizontal" Margin="0">
+                <StackPanel Width="300" Margin="0,0,10,0">
+                    <TextBlock Text="Item Name" FontWeight="Bold" />
+                    <TextBox x:Name="SearchTextBox" Text="{Binding SearchTermInput, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+                <Button x:Name="SearchButton" Content="Search" Command="{Binding SearchByNameCommand}" Width="100"/>
             </StackPanel>
-            <Button x:Name="SearchButton" Content="Search" Command="{Binding SearchByNameCommand}" Width="100"/>
-        </StackPanel>
+
+            <Button x:Name="RefreshButton" Content="Refresh" Command="{Binding RefreshPageCommand}" HorizontalAlignment="Right" Width="100" Grid.Column="1"/>
+        </Grid>
 
         <ListView Grid.Row="2" x:Name="ItemsListView" ItemsSource="{Binding FilteredSteamItensInformation}"  
           SelectedItem="{Binding SelectedItem}" Margin="10"

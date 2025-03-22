@@ -77,7 +77,7 @@
                         </GridViewColumn.Header>
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <Image Source="{Binding IconUrl}" Width="60" Height="60" Stretch="UniformToFill" RenderTransformOrigin="0.5,0.5">
+                                <Image Source="{Binding IconUrl}" Width="50" Height="50" Stretch="UniformToFill" RenderTransformOrigin="0.5,0.5">
                                     <Image.RenderTransform>
                                         <ScaleTransform ScaleX="1.5" ScaleY="1.5"/>
                                     </Image.RenderTransform>

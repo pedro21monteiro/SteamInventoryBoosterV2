@@ -36,10 +36,12 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
             SortCommand = new RelayCommand(SortItems);
             SearchByNameCommand = new RelayCommand(FilterSteamItemsByName, _ => true);
             RefreshPageCommand = new RelayCommand(RefreshSteamItemsInformation, _ => true);
+            ChangeVisibilityCommand = new RelayCommandAsync(ChangeVisibilityAsync, _ => true);
 
             _allSteamItensInformation = new ObservableCollection<SteamItemModel>();
             FilteredSteamItensInformation = new ObservableCollection<SteamItemModel>();
 
+            ShowTypeOfItems = TypeOfItems.VisibleItems;
             LoadSteamItems();
         }
 
@@ -52,6 +54,7 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
         public ICommand SortCommand { get; }
         public ICommand SearchByNameCommand { get; }
         public ICommand RefreshPageCommand { get; }
+        public ICommand ChangeVisibilityCommand { get; }
 
         public SteamItemModel SelectedItem { get; set; }
 
@@ -204,6 +207,7 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
             _allSteamItensInformation.Add(steamItemModel);
 
             ClearAddItemInputParameters();
+            FilterItemsByType();
 
             _messageBoxService.ShowSuccess("Item created successfully!");
         }
@@ -226,9 +230,10 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
             }
 
             FilteredSteamItensInformation = _allSteamItensInformation;
+            FilterItemsByType();
         }
 
-        private void GoToStemItemPage(object? arg)
+        private void GoToStemItemPage(object arg)
         {
             if (string.IsNullOrWhiteSpace(SelectedItem.Link))
             {
@@ -323,6 +328,24 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
             UpdateItemInAllSteamItensInformationList(currentItem);
 
             _messageBoxService.ShowSuccess("Item updated successfully!");
+        }
+
+        private async Task ChangeVisibilityAsync(object parameter)
+        {
+            SteamItemModel currentItem = SelectedItem;
+
+            Result<SteamItem> hideSteamItemResult = await _steamItemService.ChangeVisibilityAsync(currentItem.Id);
+
+            if (!hideSteamItemResult.IsSuccess)
+            {
+                _messageBoxService.ShowError($"Failed to hide the steam item info: {hideSteamItemResult.Error!.Message}");
+                return;
+            }
+
+            SteamItemMapping.UpdateItemViewModelInfo(currentItem, hideSteamItemResult.Value!);
+
+            UpdateItemInAllSteamItensInformationList(currentItem);
+            FilterItemsByType();
         }
 
         private string _currentSortProperty = String.Empty;
@@ -451,20 +474,17 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
             FilteredSteamItensInformation = new ObservableCollection<SteamItemModel>(sortedList);
         }
 
-        private void FilterSteamItemsByName(object? obj)
+        private void FilterSteamItemsByName(object obj)
         {
-            if (string.IsNullOrEmpty(SearchTermInput))
-            {
-                FilteredSteamItensInformation = _allSteamItensInformation;
-            }
-            else
-            {
-                var filteredBuySellsInfo = _allSteamItensInformation
-                    .Where(i => i.Name.Contains(SearchTermInput, StringComparison.OrdinalIgnoreCase))
-                    .ToList();
+            var isVisibleCondition = ShowTypeOfItems == TypeOfItems.VisibleItems ? true :
+                             ShowTypeOfItems == TypeOfItems.HiddenItems ? false : (bool?)null;
 
-                FilteredSteamItensInformation = new ObservableCollection<SteamItemModel>(filteredBuySellsInfo);
-            }
+            var filteredItems = _allSteamItensInformation
+                .Where(i => (!isVisibleCondition.HasValue || i.IsVisible == isVisibleCondition) &&
+                            (string.IsNullOrEmpty(SearchTermInput) || i.Name.Contains(SearchTermInput, StringComparison.OrdinalIgnoreCase)))
+                .ToList();
+
+            FilteredSteamItensInformation = new ObservableCollection<SteamItemModel>(filteredItems);
         }
 
         private void UpdateItemInAllSteamItensInformationList(SteamItemModel updatedItem)
@@ -485,6 +505,38 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
         {
             LoadSteamItems();
             _messageBoxService.ShowSuccess("Page successfully refreshed!");
+        }
+
+        private TypeOfItems _showTypeOfItems;
+        public TypeOfItems ShowTypeOfItems
+        {
+            get => _showTypeOfItems;
+            set
+            {
+                if (_showTypeOfItems != value)
+                {
+                    _showTypeOfItems = value;
+                    FilterItemsByType();
+                    OnPropertyChanged(nameof(ShowTypeOfItems));
+                }
+            }
+        }
+
+        private void FilterItemsByType()
+        {
+            var isVisibleCondition = ShowTypeOfItems == TypeOfItems.VisibleItems ? true : ShowTypeOfItems == TypeOfItems.HiddenItems ? false : (bool?)null;
+
+            var filteredSteamItensInfo = _allSteamItensInformation
+                .Where(i => !isVisibleCondition.HasValue || i.IsVisible == isVisibleCondition)
+                .ToList();
+
+            FilteredSteamItensInformation = new ObservableCollection<SteamItemModel>(filteredSteamItensInfo);
+        }
+
+        public enum TypeOfItems
+        {
+            VisibleItems,
+            HiddenItems
         }
     }
 }

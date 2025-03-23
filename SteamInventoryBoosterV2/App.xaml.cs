@@ -26,8 +26,6 @@ public partial class App : Application
 
     protected override void OnStartup(StartupEventArgs e)
     {
-        var culture = new CultureInfo("en-US");
-
         var serviceCollection = new ServiceCollection();
         ConfigureServices(serviceCollection);
         _serviceProvider = serviceCollection.BuildServiceProvider();

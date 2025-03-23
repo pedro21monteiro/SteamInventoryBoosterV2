@@ -59,7 +59,17 @@
                     <TextBlock Text="Item Name" FontWeight="Bold" />
                     <TextBox x:Name="SearchTextBox" Text="{Binding SearchTermInput, UpdateSourceTrigger=PropertyChanged}" />
                 </StackPanel>
+
                 <Button x:Name="SearchButton" Content="Search" Command="{Binding SearchByNameCommand}" Width="100"/>
+
+                <StackPanel Margin="30,0,0,0">
+                    <TextBlock Text="Show Items: " VerticalAlignment="Center" Margin="0,0,5,0"/>
+
+                    <ComboBox SelectedValue="{Binding ShowTypeOfItems, Mode=TwoWay}" Width="200" Margin="0,0,0,0" SelectedValuePath="Tag">
+                        <ComboBoxItem Content="Visible Items" Tag="VisibleItems"/>
+                        <ComboBoxItem Content="Hidden Items" Tag="HiddenItems"/>
+                    </ComboBox>
+                </StackPanel>
             </StackPanel>
 
             <Button x:Name="RefreshButton" Content="Refresh" Command="{Binding RefreshPageCommand}" HorizontalAlignment="Right" Width="100" Grid.Column="1"/>
@@ -134,6 +144,32 @@
                     <MenuItem Header="Edit" Command="{Binding EditItemCommand}" CommandParameter="{Binding SelectedItem}"/>
                     <MenuItem Header="Update" Command="{Binding UpdateItemCommand}" CommandParameter="{Binding SelectedItem}"/>
                     <MenuItem Header="Remove" Command="{Binding RemoveItemCommand}" CommandParameter="{Binding SelectedItem}"/>
+
+                    <MenuItem Header="Hide" Command="{Binding ChangeVisibilityCommand}" 
+                  CommandParameter="{Binding PlacementTarget.SelectedItem, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
+                        <MenuItem.Style>
+                            <Style TargetType="MenuItem">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding PlacementTarget.SelectedItem.IsVisible, RelativeSource={RelativeSource AncestorType=ContextMenu}}" Value="False">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </MenuItem.Style>
+                    </MenuItem>
+
+                    <MenuItem Header="Show" Command="{Binding ChangeVisibilityCommand}" 
+                  CommandParameter="{Binding PlacementTarget.SelectedItem, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
+                        <MenuItem.Style>
+                            <Style TargetType="MenuItem">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding PlacementTarget.SelectedItem.IsVisible, RelativeSource={RelativeSource AncestorType=ContextMenu}}" Value="True">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </MenuItem.Style>
+                    </MenuItem>
                 </ContextMenu>
             </ListView.ContextMenu>
         </ListView>

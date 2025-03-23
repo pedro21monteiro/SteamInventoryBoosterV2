@@ -42,6 +42,7 @@ namespace SteamInventoryBoosterV2.Services
                 SteamItem steamItem = SteamItemMapping.ToEntity(colectItemInfoResult.Value!);
                 steamItem.BuyPrice = buyPrice;
                 steamItem.SellPrice = sellPrice;
+                steamItem.IsVisible = true;
 
                 await _steamItemDao.CreateAsync(steamItem);
 
@@ -148,5 +149,28 @@ namespace SteamInventoryBoosterV2.Services
             }
         }
 
+        public async Task<Result<SteamItem>> ChangeVisibilityAsync(int itemId)
+        {
+            try
+            {
+                var existingItem = await _steamItemDao.GetSteamItemByIdAsync(itemId);
+
+                if (existingItem == null)
+                {
+                    return Result<SteamItem>.Failure(Error.SteamItemNotFound);
+                }
+
+                existingItem.IsVisible = !existingItem.IsVisible;
+
+                await _steamItemDao.UpdateAsync(existingItem);
+
+                return Result<SteamItem>.Success(existingItem);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Internal error while trying to change steam item visibility: {ex.Message} \n{ex}");
+                return Result<SteamItem>.Failure(Error.InternalError);
+            }
+        }
     }
 }

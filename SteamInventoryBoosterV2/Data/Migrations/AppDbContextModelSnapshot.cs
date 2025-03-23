@@ -40,6 +40,9 @@ namespace SteamInventoryBoosterV2.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsVisible")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime>("LastVerification")
                         .HasColumnType("datetime2");
 

@@ -51,7 +51,8 @@ namespace SteamInventoryBoosterV2.Models.Mappings
                 LastVerification = model.LastVerification,
                 BuyPrice = model.BuyPrice,
                 SellPrice = model.SellPrice,
-                IconUrl = model.IconUrl
+                IconUrl = model.IconUrl,
+                IsVisible = model.IsVisible
             };
         }
 
@@ -67,7 +68,8 @@ namespace SteamInventoryBoosterV2.Models.Mappings
                 Price = entity.Price,
                 HighestPurchaseOrder = entity.HighestPurchaseOrder,
                 LastVerification = entity.LastVerification,
-                IconUrl = entity.IconUrl
+                IconUrl = entity.IconUrl,
+                IsVisible = entity.IsVisible
             };
         }
 
@@ -87,6 +89,7 @@ namespace SteamInventoryBoosterV2.Models.Mappings
             model.HighestPurchaseOrder = entity.HighestPurchaseOrder;
             model.LastVerification = entity.LastVerification;
             model.IconUrl = entity.IconUrl;
+            model.IsVisible = entity.IsVisible;
         }
     }
 }

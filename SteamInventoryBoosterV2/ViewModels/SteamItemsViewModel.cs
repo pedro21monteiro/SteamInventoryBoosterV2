@@ -34,7 +34,6 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
             RemoveItemCommand = new RelayCommandAsync(RemoveSteamItemAsync, _ => true);
             UpdateItemCommand = new RelayCommandAsync(UpdateSteamItemAsync, _ => true);
             SortCommand = new RelayCommand(SortItems);
-            SearchByNameCommand = new RelayCommand(FilterSteamItemsByName, _ => true);
             RefreshPageCommand = new RelayCommand(RefreshSteamItemsInformation, _ => true);
             ChangeVisibilityCommand = new RelayCommandAsync(ChangeVisibilityAsync, _ => true);
 
@@ -52,7 +51,6 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
         public ICommand RemoveItemCommand { get; }
         public ICommand UpdateItemCommand { get; }
         public ICommand SortCommand { get; }
-        public ICommand SearchByNameCommand { get; }
         public ICommand RefreshPageCommand { get; }
         public ICommand ChangeVisibilityCommand { get; }
 
@@ -135,6 +133,7 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
             set
             {
                 _searchTermInput = value;
+                ApplyFilters();
                 OnPropertyChanged(nameof(SearchTermInput));
             }
         }
@@ -207,7 +206,7 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
             _allSteamItensInformation.Add(steamItemModel);
 
             ClearAddItemInputParameters();
-            FilterItemsByType();
+            ApplyFilters();
 
             _messageBoxService.ShowSuccess("Item created successfully!");
         }
@@ -230,7 +229,7 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
             }
 
             FilteredSteamItensInformation = _allSteamItensInformation;
-            FilterItemsByType();
+            ApplyFilters();
         }
 
         private void GoToStemItemPage(object arg)
@@ -345,7 +344,7 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
             SteamItemMapping.UpdateItemViewModelInfo(currentItem, hideSteamItemResult.Value!);
 
             UpdateItemInAllSteamItensInformationList(currentItem);
-            FilterItemsByType();
+            ApplyFilters();
         }
 
         private string _currentSortProperty = String.Empty;
@@ -474,19 +473,6 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
             FilteredSteamItensInformation = new ObservableCollection<SteamItemModel>(sortedList);
         }
 
-        private void FilterSteamItemsByName(object obj)
-        {
-            var isVisibleCondition = ShowTypeOfItems == TypeOfItems.VisibleItems ? true :
-                             ShowTypeOfItems == TypeOfItems.HiddenItems ? false : (bool?)null;
-
-            var filteredItems = _allSteamItensInformation
-                .Where(i => (!isVisibleCondition.HasValue || i.IsVisible == isVisibleCondition) &&
-                            (string.IsNullOrEmpty(SearchTermInput) || i.Name.Contains(SearchTermInput, StringComparison.OrdinalIgnoreCase)))
-                .ToList();
-
-            FilteredSteamItensInformation = new ObservableCollection<SteamItemModel>(filteredItems);
-        }
-
         private void UpdateItemInAllSteamItensInformationList(SteamItemModel updatedItem)
         {
             var originalItem = _allSteamItensInformation.FirstOrDefault(i => i.Id == updatedItem.Id);
@@ -516,21 +502,24 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
                 if (_showTypeOfItems != value)
                 {
                     _showTypeOfItems = value;
-                    FilterItemsByType();
+                    ApplyFilters();
                     OnPropertyChanged(nameof(ShowTypeOfItems));
                 }
             }
         }
 
-        private void FilterItemsByType()
+        // Responsible for applying filter by name and filter by Item type
+        private void ApplyFilters()
         {
-            var isVisibleCondition = ShowTypeOfItems == TypeOfItems.VisibleItems ? true : ShowTypeOfItems == TypeOfItems.HiddenItems ? false : (bool?)null;
+            var isVisibleCondition = ShowTypeOfItems == TypeOfItems.VisibleItems ? true :
+                             ShowTypeOfItems == TypeOfItems.HiddenItems ? false : (bool?)null;
 
-            var filteredSteamItensInfo = _allSteamItensInformation
-                .Where(i => !isVisibleCondition.HasValue || i.IsVisible == isVisibleCondition)
+            var filteredItems = _allSteamItensInformation
+                .Where(i => (!isVisibleCondition.HasValue || i.IsVisible == isVisibleCondition) &&
+                            (string.IsNullOrEmpty(SearchTermInput) || i.Name.Contains(SearchTermInput, StringComparison.OrdinalIgnoreCase)))
                 .ToList();
 
-            FilteredSteamItensInformation = new ObservableCollection<SteamItemModel>(filteredSteamItensInfo);
+            FilteredSteamItensInformation = new ObservableCollection<SteamItemModel>(filteredItems);
         }
 
         public enum TypeOfItems

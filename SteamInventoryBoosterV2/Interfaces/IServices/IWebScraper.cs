@@ -13,7 +13,6 @@ namespace SteamInventoryBoosterV2.Interfaces.IServices
     public interface IWebScraper
     {
         Task<Result<IReadOnlyCollection<Cookie>>> GetUserSteamCookies();
-
         Task<Result<SteamItemInfoDto>> CollectBasicSteamItemInformation(string link);
     }
 }

@@ -55,7 +55,9 @@ public partial class App : Application
     private void ConfigureServices(IServiceCollection services)
     {
         // Regist Services
-        services.AddDbContext<AppDbContext>();
+        services.AddDbContext<AppDbContext>(options =>
+                    options.UseSqlServer(DbConnectionConfig.GetConnectionString()));
+
         services.AddSingleton<IWebScraper, WebScraper>();
         //.AddSingleton<ISteamApiService, SteamApiService>();
         services.AddTransient<ISteamItemDao, SteamItemDao>();

@@ -12,11 +12,9 @@ namespace SteamInventoryBoosterV2.Data
     public class AppDbContext : DbContext
     {
         public DbSet<SteamItem> SteamItems { get; set; }
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
-            var dbname = "SteamInventoryBoosterDbV2";
-            var dbhost = ".\\SQLEXPRESS";
-            optionsBuilder.UseSqlServer($"Server={dbhost};Database={dbname};Trusted_Connection=True;TrustServerCertificate=True;");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -73,7 +73,10 @@ public partial class App : Application
         services.AddTransient<SteamItemsViewModel>();
 
         services.AddTransient<InventoryManagementPage>();
+
         services.AddTransient<BotManagerPage>();
+        services.AddTransient<BotManagerViewModel>();
+
         services.AddTransient<SettingsPage>();
 
     }

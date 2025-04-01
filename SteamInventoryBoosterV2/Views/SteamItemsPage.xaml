@@ -44,7 +44,7 @@
                     <TextBox x:Name="TextBoxProfitPercentage" Text="{Binding ProfitPercentageInput, Mode=OneWay}" IsReadOnly="True" Background="LightGray"/>
                 </StackPanel>
 
-                <Button x:Name="AddButton" Content="Add" Command="{Binding AddItemCommand}" Width="100" Margin="10,0,0,0"/>
+                <Button x:Name="AddButton" Content="Add" Command="{Binding AddItemCommand}" Width="100" FontWeight="Bold" Margin="10,0,0,0"/>
             </StackPanel>
         </StackPanel>
 
@@ -70,7 +70,8 @@
                 </StackPanel>
             </StackPanel>
 
-            <Button x:Name="RefreshButton" Content="Refresh" Command="{Binding RefreshPageCommand}" HorizontalAlignment="Right" Width="100" Grid.Column="1"/>
+            <Button x:Name="RefreshButton" Content="Refresh" Command="{Binding RefreshPageCommand}" HorizontalAlignment="Right" Width="100" FontWeight="Bold"
+                    Grid.Column="1"/>
         </Grid>
 
         <ListView Grid.Row="2" x:Name="ItemsListView" ItemsSource="{Binding FilteredSteamItensInformation}"  

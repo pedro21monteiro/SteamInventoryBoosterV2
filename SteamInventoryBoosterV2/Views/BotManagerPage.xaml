@@ -16,13 +16,15 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top">
-            <ComboBox SelectedValue="{Binding SelectedFunction, Mode=TwoWay}" Width="200" Margin="0,0,10,0" SelectedValuePath="Tag">
-                <ComboBoxItem Content="Collect Items" Tag="CollectItems"/>
-                <ComboBoxItem Content="Send Exchanges" Tag="SendExchanges"/>
+            <ComboBox SelectedValue="{Binding SelectedFunction, Mode=TwoWay}" Width="200" Margin="0,0,10,0" SelectedValuePath="Tag"
+                      IsEnabled="{Binding IsComboBoxEnabled}">
+                <ComboBoxItem Content="Collect Items" Tag="SellItems"/>
+                <ComboBoxItem Content="Send Exchanges" Tag="UpdatePrices"/>
             </ComboBox>
 
-            <Button x:Name="btnStart" Content="Start" Width="80" Height="30"  Margin="0,0,10,0" Command="{Binding StartCommand}"/>
-            <Button x:Name="btnClear" Content="Clear" Width="80" Height="30" Command="{Binding ClearCommand}"/>
+            <Button x:Name="btnStartStop" Content="{Binding StartStopButtonText}" Width="80" Height="30"  Margin="0,0,10,0" FontWeight="Bold"
+                    Command="{Binding StartStopCommand}" IsEnabled="{Binding CanStartOrStop}" Background="{Binding StartStopButtonColor}"/>
+            <Button x:Name="btnClear" Content="Clear" Width="80" Height="30"  FontWeight="Bold" Command="{Binding ClearCommand}"/>
         </StackPanel>
 
         <DataGrid x:Name="dgLog" Grid.Row="2" AutoGenerateColumns="False" HeadersVisibility="Column"
@@ -30,6 +32,7 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Timestamp" Binding="{Binding Timestamp}" Width="150"/>
                 <DataGridTextColumn Header="Action" Binding="{Binding Action}" Width="120"/>
+                <DataGridTextColumn Header="Item" Binding="{Binding ItemName}" Width="120"/>
                 <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="120"/>
                 <DataGridTextColumn Header="Message" Binding="{Binding Message}" Width="*"/>
             </DataGrid.Columns>

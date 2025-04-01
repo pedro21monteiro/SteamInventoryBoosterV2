@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SteamInventoryBoosterV2.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +21,10 @@ namespace SteamInventoryBoosterV2.Views
     /// </summary>
     public partial class BotManagerPage : Page
     {
-        public BotManagerPage()
+        public BotManagerPage(BotManagerViewModel viewModel)
         {
             InitializeComponent();
+            DataContext = viewModel;
         }
     }
 }

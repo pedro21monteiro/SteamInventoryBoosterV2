@@ -22,6 +22,7 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
                 OnPropertyChanged(nameof(Id));
             }
         }
+
         private string _link = String.Empty;
         public string Link
         {

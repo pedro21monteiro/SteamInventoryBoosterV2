@@ -1,4 +1,6 @@
 ﻿using Microsoft.IdentityModel.Tokens;
+using SteamInventoryBoosterV2.Interfaces.IServices;
+using SteamInventoryBoosterV2.Models.Utilities;
 using SteamInventoryBoosterV2.ViewModels.Commands;
 using SteamInventoryBoosterV2.ViewModels.ItemViewModels;
 using System;
@@ -17,17 +19,17 @@ namespace SteamInventoryBoosterV2.ViewModels
 {
     public class BotManagerViewModel : BaseViewModel
     {
-        public BotManagerViewModel()
+        private readonly IWebScraper _webScraper;
+        private readonly ISteamApiService _steamApiService;
+        public BotManagerViewModel(IWebScraper webScraper, ISteamApiService steamApiService)
         {
+            _webScraper = webScraper ?? throw new ArgumentNullException(nameof(webScraper));
+            _steamApiService = steamApiService ?? throw new ArgumentNullException(nameof(steamApiService));
+
+            // Commands
             StartStopCommand = new RelayCommandAsync(StartOrStop, _ => CanStartOrStop);
 
             LogItems = new ObservableCollection<LogItemModel>();
-
-            
-
-            //LogItems.Add(new LogItemModel(DateTime.Now, "Login", "User1", LogStatus.Success, "Login bem-sucedido"));
-            //LogItems.Add(new LogItemModel(DateTime.Now, "Logout", "User2", LogStatus.Failure, "Erro ao sair"));
-            //LogItems.Add(new LogItemModel(DateTime.Now, "Update", "FileX", LogStatus.InProgress, "Atualização em andamento"));
         }
 
         // Commands
@@ -119,16 +121,64 @@ namespace SteamInventoryBoosterV2.ViewModels
             IsRunning = false;
         }
 
+        // In the future, try to make these variables global variables in the application
+        private IReadOnlyCollection<OpenQA.Selenium.Cookie>? _steamCookies = null;
+        private string? _cookiesString = String.Empty;
+        private string? _sessionId = String.Empty;
+
         private async Task SellSteamItem(CancellationToken token)
         {
             try
             {
+                LogItems.Add(new LogItemModel("Selling Function", String.Empty, LogStatus.Started, "Starting the functionality of selling steam items."));
+
+                LogItems.Add(new LogItemModel("Get Cookies", String.Empty, LogStatus.InProgress, "Getting session cookies."));
+
+                Result<IReadOnlyCollection<OpenQA.Selenium.Cookie>> getCookiesResult = await _webScraper.GetUserSteamCookies();
+
+                if (!getCookiesResult.IsSuccess || getCookiesResult.Value == null)
+                {
+                    LogItems.Add(new LogItemModel("Get Cookies", String.Empty, LogStatus.Failure, getCookiesResult.Error!.Message));
+                    LogItems.Add(new LogItemModel("Selling Function", String.Empty, LogStatus.Finished, "Finished the functionality of selling Steam items."));
+                    return;
+                }
+
+                _steamCookies = getCookiesResult.Value;
+                LogItems.Add(new LogItemModel("Get Cookies", String.Empty, LogStatus.Success, "Session cookies obtained successfully."));
+
+                if (token.IsCancellationRequested) return;
+
+                LogItems.Add(new LogItemModel("Get Inventory Info", String.Empty, LogStatus.InProgress, "Starting to retrieve inventory information."));
+
+                _cookiesString = String.Join("; ", _steamCookies.Select(c => $"{c.Name}={c.Value}"));
+                _sessionId = _steamCookies.FirstOrDefault(cookie => cookie.Name.Equals("sessionid", StringComparison.OrdinalIgnoreCase))?.Value;
+
+                var getInventoryInfoResponse = await _steamApiService.GetInventoryInfoAsync(_cookiesString);
+
+                if(!getInventoryInfoResponse.IsSuccess || getInventoryInfoResponse.Value == null)
+                {
+                    LogItems.Add(new LogItemModel("Get Inventory Info", String.Empty, LogStatus.Failure, getInventoryInfoResponse.Error!.Message));
+                    LogItems.Add(new LogItemModel("Selling Function", String.Empty, LogStatus.Finished, "Finished the functionality of selling Steam items."));
+                    return;
+                }
+
+                LogItems.Add(new LogItemModel("Get Inventory Info", String.Empty, LogStatus.Success, 
+                    $"Inventory information extracted successfully. {getInventoryInfoResponse.Value.total_inventory_count} items were detected in the Inventory."));
+
+
+
+
+
+
+
                 await Task.Delay(10000, token);
                 if (token.IsCancellationRequested) return;
+
+                LogItems.Add(new LogItemModel("Selling Function", String.Empty, LogStatus.Finished, "Finished the functionality of selling Steam items."));
             }
             catch (OperationCanceledException)
             {
-                Console.WriteLine("Tarefa de falha cancelada.");
+                Console.WriteLine("Item sales task canceled by the user.");
             }
             finally
             {
@@ -138,19 +188,20 @@ namespace SteamInventoryBoosterV2.ViewModels
 
         private async Task UpdateSteamItemsPrices(CancellationToken token)
         {
-            try
-            {
-                await Task.Delay(10000, token);
-                if (token.IsCancellationRequested) return;
-            }
-            catch (OperationCanceledException)
-            {
-                Console.WriteLine("Tarefa de falha cancelada.");
-            }
-            finally
-            {
-                IsRunning = false;
-            }
+            //try
+            //{
+
+            //    await Task.Delay(10000, token);
+            //    if (token.IsCancellationRequested) return;
+            //}
+            //catch (OperationCanceledException)
+            //{
+            //    Console.WriteLine("Item sales task canceled by the user.");
+            //}
+            //finally
+            //{
+            //    IsRunning = false;
+            //}
         }
     }
 }

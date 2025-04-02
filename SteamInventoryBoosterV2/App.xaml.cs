@@ -63,6 +63,7 @@ public partial class App : Application
         services.AddTransient<ISteamItemDao, SteamItemDao>();
         services.AddTransient<ISteamItemService, SteamItemService>();
         services.AddTransient<IMessageBoxService, MessageBoxService>();
+        services.AddTransient<ISteamApiService, SteamApiService>();
 
         // Regist Main Window
         services.AddTransient<MainAppWindow>();

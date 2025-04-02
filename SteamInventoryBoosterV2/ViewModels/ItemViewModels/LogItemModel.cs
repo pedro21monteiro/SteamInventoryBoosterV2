@@ -17,6 +17,11 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
             Status = status;
             Message = message;
         }
+        
+        public LogItemModel(string action, string itemName, LogStatus status, string message)
+            : this(DateTime.Now, action, itemName, status, message)
+        {
+        }
 
         private DateTime _timestamp;
         public DateTime Timestamp
@@ -75,11 +80,13 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
 
         public enum LogStatus
         {
+            Started,
             Success,
             Failure,
             Pending,
             InProgress,
-            Cancelled
+            Cancelled,
+            Finished
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

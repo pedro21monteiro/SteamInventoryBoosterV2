@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 
 namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
 {
@@ -17,7 +12,7 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
             Status = status;
             Message = message;
         }
-        
+
         public LogItemModel(string action, string itemName, LogStatus status, string message)
             : this(DateTime.Now, action, itemName, status, message)
         {
@@ -86,6 +81,7 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
             Pending,
             InProgress,
             Cancelled,
+            Stopped,
             Finished
         }
 

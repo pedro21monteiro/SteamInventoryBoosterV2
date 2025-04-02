@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SteamInventoryBoosterV2.Services
+﻿namespace SteamInventoryBoosterV2.Services
 {
     public static class Calculus
     {
@@ -49,7 +42,7 @@ namespace SteamInventoryBoosterV2.Services
                     if (SellerReceivesToBuyerPays(closeSellerReceives) > paidMoney)
                     {
                         return closeSellerReceives -= 0.01m;
-                    } 
+                    }
                 }
             }
 

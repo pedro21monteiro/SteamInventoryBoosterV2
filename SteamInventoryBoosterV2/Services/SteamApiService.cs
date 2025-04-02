@@ -1,15 +1,9 @@
-﻿using SteamInventoryBoosterV2.Interfaces.IServices;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Net;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
+﻿using Newtonsoft.Json.Linq;
+using SteamInventoryBoosterV2.Interfaces.IServices;
+using SteamInventoryBoosterV2.Models.SteamApi.Response;
 using SteamInventoryBoosterV2.Models.Utilities;
-using SteamInventoryBoosterV2.Models.SteamApiResponse;
-using Newtonsoft.Json.Linq;
+using System.Net;
+using System.Net.Http;
 
 namespace SteamInventoryBoosterV2.Services
 {

@@ -8,11 +8,7 @@ using SteamInventoryBoosterV2.Services;
 using SteamInventoryBoosterV2.ViewModels;
 using SteamInventoryBoosterV2.ViewModels.ItemViewModels;
 using SteamInventoryBoosterV2.Views;
-using System;
-using System.Configuration;
-using System.Data;
 using System.Diagnostics;
-using System.Globalization;
 using System.Windows;
 
 namespace SteamInventoryBoosterV2;

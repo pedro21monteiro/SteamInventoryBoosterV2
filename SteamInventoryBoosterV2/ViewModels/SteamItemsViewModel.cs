@@ -1,17 +1,11 @@
 ﻿using SteamInventoryBoosterV2.Interfaces.IServices;
 using SteamInventoryBoosterV2.Models.Domain;
-using SteamInventoryBoosterV2.Models.Dtos;
 using SteamInventoryBoosterV2.Models.Mappings;
 using SteamInventoryBoosterV2.Models.Utilities;
 using SteamInventoryBoosterV2.Services;
 using SteamInventoryBoosterV2.ViewModels.Commands;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
@@ -198,7 +192,7 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
             if (!createSteamItemResult.IsSuccess)
             {
                 _messageBoxService.ShowError($"Failed to create the item: {createSteamItemResult.Error!.Message}");
-                return;                
+                return;
             }
 
             SteamItemModel steamItemModel = SteamItemMapping.ToItemViewModel(createSteamItemResult.Value!);

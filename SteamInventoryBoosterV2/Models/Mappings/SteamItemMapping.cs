@@ -1,13 +1,6 @@
-﻿using OpenQA.Selenium;
-using SteamInventoryBoosterV2.Models.Domain;
+﻿using SteamInventoryBoosterV2.Models.Domain;
 using SteamInventoryBoosterV2.Models.Dtos;
-using SteamInventoryBoosterV2.Services;
 using SteamInventoryBoosterV2.ViewModels.ItemViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SteamInventoryBoosterV2.Models.Mappings
 {

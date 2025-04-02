@@ -1,12 +1,5 @@
 ﻿using SteamInventoryBoosterV2.Services;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media.Imaging;
 
 namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
 {
@@ -71,7 +64,7 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
             }
         }
 
-        public decimal SellProfit => Calculus.SellItemProfit(BuyPrice,SellPrice);
+        public decimal SellProfit => Calculus.SellItemProfit(BuyPrice, SellPrice);
 
         public decimal ProfitPercentage => Calculus.SellItemProfitPercentage(BuyPrice, SellPrice);
 

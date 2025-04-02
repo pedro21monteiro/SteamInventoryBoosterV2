@@ -2,16 +2,8 @@
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 using SteamInventoryBoosterV2.Interfaces.IServices;
-using SteamInventoryBoosterV2.Models.Domain;
 using SteamInventoryBoosterV2.Models.Dtos;
 using SteamInventoryBoosterV2.Models.Utilities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows;
 
 namespace SteamInventoryBoosterV2.Services
 {

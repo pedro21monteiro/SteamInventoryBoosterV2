@@ -18,7 +18,6 @@
 
   <ItemGroup>
     <Folder Include="Models\Domain\" />
-    <Folder Include="Models\SteamApi\" />
   </ItemGroup>
 
   <ItemGroup>

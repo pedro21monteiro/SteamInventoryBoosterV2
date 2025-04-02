@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SteamInventoryBoosterV2.Models.SteamApiModels
+﻿namespace SteamInventoryBoosterV2.Models.SteamApiModels
 {
     public class Description
     {

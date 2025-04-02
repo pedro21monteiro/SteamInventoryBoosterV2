@@ -1,19 +1,12 @@
-﻿using Microsoft.IdentityModel.Tokens;
-using SteamInventoryBoosterV2.Interfaces.IServices;
+﻿using SteamInventoryBoosterV2.Interfaces.IServices;
 using SteamInventoryBoosterV2.Models.Utilities;
+using SteamInventoryBoosterV2.Services;
 using SteamInventoryBoosterV2.ViewModels.Commands;
 using SteamInventoryBoosterV2.ViewModels.ItemViewModels;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
 using static SteamInventoryBoosterV2.ViewModels.ItemViewModels.LogItemModel;
-using static SteamInventoryBoosterV2.ViewModels.ItemViewModels.SteamItemsViewModel;
 
 namespace SteamInventoryBoosterV2.ViewModels
 {
@@ -146,7 +139,7 @@ namespace SteamInventoryBoosterV2.ViewModels
                 _steamCookies = getCookiesResult.Value;
                 LogItems.Add(new LogItemModel("Get Cookies", String.Empty, LogStatus.Success, "Session cookies obtained successfully."));
 
-                if (token.IsCancellationRequested) return;
+                if (token.IsCancellationRequested) throw new OperationCanceledException();
 
                 LogItems.Add(new LogItemModel("Get Inventory Info", String.Empty, LogStatus.InProgress, "Starting to retrieve inventory information."));
 
@@ -155,19 +148,25 @@ namespace SteamInventoryBoosterV2.ViewModels
 
                 var getInventoryInfoResponse = await _steamApiService.GetInventoryInfoAsync(_cookiesString);
 
-                if(!getInventoryInfoResponse.IsSuccess || getInventoryInfoResponse.Value == null)
+                if (!getInventoryInfoResponse.IsSuccess || getInventoryInfoResponse.Value == null)
                 {
                     LogItems.Add(new LogItemModel("Get Inventory Info", String.Empty, LogStatus.Failure, getInventoryInfoResponse.Error!.Message));
                     LogItems.Add(new LogItemModel("Selling Function", String.Empty, LogStatus.Finished, "Finished the functionality of selling Steam items."));
                     return;
                 }
 
-                LogItems.Add(new LogItemModel("Get Inventory Info", String.Empty, LogStatus.Success, 
+                LogItems.Add(new LogItemModel("Get Inventory Info", String.Empty, LogStatus.Success,
                     $"Inventory information extracted successfully. {getInventoryInfoResponse.Value.total_inventory_count} items were detected in the Inventory."));
 
+                if (token.IsCancellationRequested) throw new OperationCanceledException();
 
+                // Meter log a dizer que está a começar processamento da informação recebia
 
+                var tradableItens = InventoryHelper.GetTradableItems(getInventoryInfoResponse.Value);
 
+                // Meter log a dizer quantos itens tradables foram detetados
+
+                // Meter log a dizer que vai começar a pôr os itens steam à venda
 
 
 
@@ -178,7 +177,15 @@ namespace SteamInventoryBoosterV2.ViewModels
             }
             catch (OperationCanceledException)
             {
-                Console.WriteLine("Item sales task canceled by the user.");
+                LogItems.Add(new LogItemModel("Selling Function", String.Empty, LogStatus.Stopped, "Item sales function stopped by the user."));
+                LogItems.Add(new LogItemModel("Selling Function", String.Empty, LogStatus.Finished, "Finished the functionality of selling Steam items."));
+                Console.WriteLine("Item sales function stopped by the user.");
+            }
+            catch (Exception ex)
+            {
+                LogItems.Add(new LogItemModel("Selling Function", String.Empty, LogStatus.Failure, "An internal error occurred. The function will be terminated."));
+                LogItems.Add(new LogItemModel("Selling Function", String.Empty, LogStatus.Finished, "Finished the functionality of selling Steam items."));
+                Console.WriteLine($"Internal in selling steam items function: {ex}");
             }
             finally
             {

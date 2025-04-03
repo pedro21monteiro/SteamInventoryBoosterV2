@@ -23,6 +23,7 @@ namespace SteamInventoryBoosterV2.ViewModels
 
             // Commands
             StartStopCommand = new RelayCommandAsync(StartOrStop, _ => CanStartOrStop);
+            ClearCommand = new RelayCommand(ClearLogs, _ => true);
 
             LogItems = new ObservableCollection<LogItemModel>();
             _steamItemService = steamItemService;
@@ -115,6 +116,11 @@ namespace SteamInventoryBoosterV2.ViewModels
                 IsRunning = false;
             }
             IsRunning = false;
+        }
+
+        private void ClearLogs(object? obj)
+        {
+            LogItems.Clear();
         }
 
         // In the future, try to make these variables global variables in the application

@@ -56,6 +56,23 @@ namespace Tests.Services
             Assert.Equal(expected, result);
         }
 
+        [Theory]
+        [InlineData(10.01, 1001)]
+        [InlineData(0.69, 69)]
+        [InlineData(3.14, 314)]
+        [InlineData(99.99, 9999)]
+        [InlineData(0.00, 0)]
+        [InlineData(1.009, 101)]
+        [InlineData(1.003, 100)]
+        public void ConvertDecimalToInteger_ShouldReturnExpected(decimal value, int expected)
+        {
+            // Act
+            var result = Calculus.ConvertDecimalToInteger(value);
+
+            // Assert
+            Assert.Equal(expected, result);
+        }
+
         //[Theory]
         //[InlineData(0.015, 0.01)]
         //[InlineData(0.038, 0.03)]

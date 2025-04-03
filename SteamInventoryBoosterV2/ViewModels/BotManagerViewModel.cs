@@ -139,15 +139,23 @@ namespace SteamInventoryBoosterV2.ViewModels
                     return;
                 }
 
+                // Process all necessary cookies
                 _steamCookies = getCookiesResult.Value;
+                _cookiesString = String.Join("; ", _steamCookies.Select(c => $"{c.Name}={c.Value}"));
+                _sessionId = _steamCookies.FirstOrDefault(cookie => cookie.Name.Equals("sessionid", StringComparison.OrdinalIgnoreCase))?.Value;
+
+                if (_sessionId == null)
+                {
+                    LogItems.Add(new LogItemModel("Get Cookies", String.Empty, LogStatus.Failure, "Error finding SessionId in cookies."));
+                    LogItems.Add(new LogItemModel("Selling Function", String.Empty, LogStatus.Finished, "Finished the functionality of selling Steam items."));
+                    return;
+                }
+
                 LogItems.Add(new LogItemModel("Get Cookies", String.Empty, LogStatus.Success, "Session cookies obtained successfully."));
 
                 if (token.IsCancellationRequested) throw new OperationCanceledException();
 
                 LogItems.Add(new LogItemModel("Get Inventory Info", String.Empty, LogStatus.InProgress, "Starting to retrieve inventory information."));
-
-                _cookiesString = String.Join("; ", _steamCookies.Select(c => $"{c.Name}={c.Value}"));
-                _sessionId = _steamCookies.FirstOrDefault(cookie => cookie.Name.Equals("sessionid", StringComparison.OrdinalIgnoreCase))?.Value;
 
                 var getInventoryInfoResponse = await _steamApiService.GetInventoryInfoAsync(_cookiesString);
 
@@ -190,23 +198,31 @@ namespace SteamInventoryBoosterV2.ViewModels
 
                     if(!getSteamItemResult.IsSuccess || getSteamItemResult.Value == null)
                     {
-                        LogItems.Add(new LogItemModel("Selling Items", item.MarketName, LogStatus.Failure, "No information on this item could be found in the application database."));
+                        LogItems.Add(new LogItemModel("Selling Item", item.MarketName, LogStatus.Failure, "No information on this item could be found in the application database."));
                         continue;
                     }
 
-                    // vai vender o item e esperar a resposta
+                    LogItems.Add(new LogItemModel("Selling Item", item.MarketName, LogStatus.InProgress, $"Putting the item up for sale at {getSteamItemResult.Value.SellPrice}€ (Receive: {Calculus.BuyerPaysToSellerReceives(getSteamItemResult.Value.SellPrice)}€)"));
 
+                    var sellItemResponse = await _steamApiService.SellSteamItemByApiAsync(_cookiesString, _sessionId, item.Assetid, getSteamItemResult.Value.SellPrice);
+
+                    if (!sellItemResponse.IsSuccess || sellItemResponse.Value == null)
+                    {
+                        LogItems.Add(new LogItemModel("Selling Item", item.MarketName, LogStatus.Failure, sellItemResponse.Error!.Message));
+                        continue;
+                    }
+
+                    if(sellItemResponse.Value.requires_confirmation == 1)
+                    {
+                        LogItems.Add(new LogItemModel("Selling Item", item.MarketName, LogStatus.Success, "Item successfully submitted for sale, but requires additional confirmation."));
+                    }
+                    else
+                    {
+                        LogItems.Add(new LogItemModel("Selling Item", item.MarketName, LogStatus.Success, "Item successfully submitted for sale."));
+                    }
                 }
 
-
-
-
-
-
-
-
-                await Task.Delay(10000, token);
-                if (token.IsCancellationRequested) return;
+                LogItems.Add(new LogItemModel("Selling Items", String.Empty, LogStatus.Finished, "Finished listing Steam items for sale."));
 
                 LogItems.Add(new LogItemModel("Selling Function", String.Empty, LogStatus.Finished, "Finished the functionality of selling Steam items."));
             }

@@ -90,5 +90,10 @@
             // return only to 2 decimal places 
             return Math.Truncate(number * 100) / 100;
         }
+
+        public static int ConvertDecimalToInteger(decimal value)
+        {
+            return (int)Math.Round(value * 100);
+        }
     }
 }

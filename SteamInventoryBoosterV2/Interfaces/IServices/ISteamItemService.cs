@@ -11,5 +11,6 @@ namespace SteamInventoryBoosterV2.Interfaces.IServices
         Task<Result> DeleteSteamItemAsync(int itemId);
         Task<Result<SteamItem>> UpdateSteamItemInfoAsync(int itemId);
         Task<Result<SteamItem>> ChangeVisibilityAsync(int itemId);
+        Task<Result<SteamItem>> GetSteamItemByNameAsync(string name);
     }
 }

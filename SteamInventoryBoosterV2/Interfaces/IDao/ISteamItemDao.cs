@@ -10,5 +10,6 @@ namespace SteamInventoryBoosterV2.Interfaces.IDao
         Task UpdateAsync(SteamItem item);
         Task<SteamItem?> GetSteamItemByIdAsync(int id);
         Task DeleteAsync(SteamItem item);
+        Task<SteamItem?> GetSteamItemByNameAsync(string name);
     }
 }

@@ -14,15 +14,18 @@ namespace SteamInventoryBoosterV2.ViewModels
     {
         private readonly IWebScraper _webScraper;
         private readonly ISteamApiService _steamApiService;
-        public BotManagerViewModel(IWebScraper webScraper, ISteamApiService steamApiService)
+        private readonly ISteamItemService _steamItemService;
+        public BotManagerViewModel(IWebScraper webScraper, ISteamApiService steamApiService, ISteamItemService steamItemService)
         {
             _webScraper = webScraper ?? throw new ArgumentNullException(nameof(webScraper));
             _steamApiService = steamApiService ?? throw new ArgumentNullException(nameof(steamApiService));
+            _steamItemService = steamItemService ?? throw new ArgumentNullException(nameof(steamItemService));
 
             // Commands
             StartStopCommand = new RelayCommandAsync(StartOrStop, _ => CanStartOrStop);
 
             LogItems = new ObservableCollection<LogItemModel>();
+            _steamItemService = steamItemService;
         }
 
         // Commands
@@ -160,13 +163,45 @@ namespace SteamInventoryBoosterV2.ViewModels
 
                 if (token.IsCancellationRequested) throw new OperationCanceledException();
 
-                // Meter log a dizer que está a começar processamento da informação recebia
+                LogItems.Add(new LogItemModel("Processing Inventory", String.Empty, LogStatus.InProgress, "Processing inventory information to uncover tradable items."));
 
                 var tradableItens = InventoryHelper.GetTradableItems(getInventoryInfoResponse.Value);
 
-                // Meter log a dizer quantos itens tradables foram detetados
+                if(tradableItens == null || tradableItens.Count == 0)
+                {
+                    LogItems.Add(new LogItemModel("Processing Inventory", String.Empty, LogStatus.Finished, getInventoryInfoResponse.Error!.Message));
+                    LogItems.Add(new LogItemModel("Selling Function", String.Empty, LogStatus.Finished, "No tradable items were detected in the inventory."));
+                    return;
+                }
 
-                // Meter log a dizer que vai começar a pôr os itens steam à venda
+                LogItems.Add(new LogItemModel("Processing Inventory", String.Empty, LogStatus.Finished, $"{tradableItens.Count} tradable items were detected in the inventory"));
+
+                LogItems.Add(new LogItemModel("Selling Items", String.Empty, LogStatus.Started, "Starting the process of listing Steam items for sale."));
+
+                foreach(var item in tradableItens)
+                {
+                    // Put up for sale every 500 milliseconds
+                    await Task.Delay(500, token);
+                    if (token.IsCancellationRequested) throw new OperationCanceledException();
+
+                    LogItems.Add(new LogItemModel("Selling Item", item.MarketName, LogStatus.Started, "Looking for the prices set for this steam item."));
+
+                    var getSteamItemResult = await _steamItemService.GetSteamItemByNameAsync(item.MarketName);
+
+                    if(!getSteamItemResult.IsSuccess || getSteamItemResult.Value == null)
+                    {
+                        LogItems.Add(new LogItemModel("Selling Items", item.MarketName, LogStatus.Failure, "No information on this item could be found in the application database."));
+                        continue;
+                    }
+
+                    // vai vender o item e esperar a resposta
+
+                }
+
+
+
+
+
 
 
 

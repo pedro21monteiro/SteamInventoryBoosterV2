@@ -46,5 +46,10 @@ namespace SteamInventoryBoosterV2.Dao
             _context.SteamItems.Remove(item);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<SteamItem?> GetSteamItemByNameAsync(string name)
+        {
+            return await _context.SteamItems.FirstOrDefaultAsync(i => i.Name == name);
+        }
     }
 }

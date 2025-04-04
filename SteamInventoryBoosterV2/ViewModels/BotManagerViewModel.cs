@@ -1,4 +1,5 @@
-﻿using SteamInventoryBoosterV2.Interfaces.IServices;
+﻿using OpenQA.Selenium.BiDi.Modules.Storage;
+using SteamInventoryBoosterV2.Interfaces.IServices;
 using SteamInventoryBoosterV2.Models.Utilities;
 using SteamInventoryBoosterV2.Services;
 using SteamInventoryBoosterV2.ViewModels.Commands;
@@ -64,7 +65,7 @@ namespace SteamInventoryBoosterV2.ViewModels
         public enum TypeOfFunctions
         {
             SellItems,
-            UpdatePrices
+            UpdateItemsInfo
         }
 
         private bool _isRunning = false;
@@ -107,9 +108,9 @@ namespace SteamInventoryBoosterV2.ViewModels
             {
                 await SellSteamItem(token);
             }
-            else if (SelectedFunction == TypeOfFunctions.UpdatePrices)
+            else if (SelectedFunction == TypeOfFunctions.UpdateItemsInfo)
             {
-                await UpdateSteamItemsPrices(token);
+                await UpdateSteamItemsInformation(token);
             }
             else
             {
@@ -183,8 +184,8 @@ namespace SteamInventoryBoosterV2.ViewModels
 
                 if(tradableItens == null || tradableItens.Count == 0)
                 {
-                    LogItems.Add(new LogItemModel("Processing Inventory", String.Empty, LogStatus.Finished, getInventoryInfoResponse.Error!.Message));
-                    LogItems.Add(new LogItemModel("Selling Function", String.Empty, LogStatus.Finished, "No tradable items were detected in the inventory."));
+                    LogItems.Add(new LogItemModel("Processing Inventory", String.Empty, LogStatus.Finished, "No tradable items were detected in the inventory."));
+                    LogItems.Add(new LogItemModel("Selling Function", String.Empty, LogStatus.Finished, "Finished the functionality of selling Steam items."));
                     return;
                 }
 
@@ -250,22 +251,62 @@ namespace SteamInventoryBoosterV2.ViewModels
             }
         }
 
-        private async Task UpdateSteamItemsPrices(CancellationToken token)
+        private async Task UpdateSteamItemsInformation(CancellationToken token)
         {
-            //try
-            //{
+            try
+            {
+                LogItems.Add(new LogItemModel("Update Function", String.Empty, LogStatus.Started, "Starting the functionality of updating Steam items information."));
 
-            //    await Task.Delay(10000, token);
-            //    if (token.IsCancellationRequested) return;
-            //}
-            //catch (OperationCanceledException)
-            //{
-            //    Console.WriteLine("Item sales task canceled by the user.");
-            //}
-            //finally
-            //{
-            //    IsRunning = false;
-            //}
+                LogItems.Add(new LogItemModel("Get DB Info", String.Empty, LogStatus.InProgress, "Getting information from the steam Items in database ."));
+
+                var getSteamItemsResult = await _steamItemService.GetAllItemsAsync();
+
+                if(!getSteamItemsResult.IsSuccess || getSteamItemsResult.Value == null)
+                {
+                    LogItems.Add(new LogItemModel("Get DB Info", String.Empty, LogStatus.Failure, getSteamItemsResult.Error!.Message));
+                    LogItems.Add(new LogItemModel("Update Function", String.Empty, LogStatus.Finished, "Finished the functionality of updating Steam items information."));
+                    return;
+                }
+
+                LogItems.Add(new LogItemModel("Get DB Info", String.Empty, LogStatus.Success, "DB Steam items information obtained successfully."));
+
+                foreach(var item in getSteamItemsResult.Value)
+                {
+                    // Get other item information every 5000 milliseconds, to don't block session
+                    await Task.Delay(5000, token);
+                    if (token.IsCancellationRequested) throw new OperationCanceledException();
+
+                    LogItems.Add(new LogItemModel("Update Item", item.Name, LogStatus.InProgress, "Trying to update steam item information."));
+
+                    var updateItemInfoResult = await _steamItemService.UpdateSteamItemInfoAsync(item.Id);
+
+                    if (!updateItemInfoResult.IsSuccess || updateItemInfoResult.Value == null)
+                    {
+                        LogItems.Add(new LogItemModel("Update Item", item.Name, LogStatus.Failure, updateItemInfoResult.Error!.Message));
+                        continue;
+                    }
+
+                    LogItems.Add(new LogItemModel("Update Item", item.Name, LogStatus.Success, "Steam item information updated successfully."));
+                }
+
+                LogItems.Add(new LogItemModel("Selling Function", String.Empty, LogStatus.Finished, "Finished the functionality of updating Steam items information."));
+            }
+            catch (OperationCanceledException)
+            {
+                LogItems.Add(new LogItemModel("Update Function", String.Empty, LogStatus.Stopped, "Update steam items information stopped by the user."));
+                LogItems.Add(new LogItemModel("Update Function", String.Empty, LogStatus.Finished, "Finished the functionality of updating Steam items information."));
+                Console.WriteLine("Update steam items information function stopped by the user.");
+            }
+            catch (Exception ex)
+            {
+                LogItems.Add(new LogItemModel("Selling Function", String.Empty, LogStatus.Failure, "An internal error occurred. The function will be terminated."));
+                LogItems.Add(new LogItemModel("Selling Function", String.Empty, LogStatus.Finished, "Finished the functionality of updating Steam items information."));
+                Console.WriteLine($"Internal in updating Steam items information function: {ex}");
+            }
+            finally
+            {
+                IsRunning = false;
+            }
         }
     }
 }

@@ -79,8 +79,8 @@ namespace Tests.Dao
         {
             // Arrange
             _context.SteamItems.AddRange(
-                new SteamItem { Link = "https://steamitem.com/item1", Name = "Item1" },
-                new SteamItem { Link = "https://steamitem.com/item2", Name = "Item2" }
+                new SteamItem {ClassId = "1111", Link = "https://steamitem.com/item1", Name = "Item1" },
+                new SteamItem {ClassId = "1112", Link = "https://steamitem.com/item2", Name = "Item2" }
             );
             await _context.SaveChangesAsync();
 
@@ -95,7 +95,7 @@ namespace Tests.Dao
         public async Task UpdateAsync_UpdatesItem()
         {
             // Arrange
-            var item = new SteamItem { ClassId = "1", Link = "https://steamitem.com/item1", Name = "Item1" };
+            var item = new SteamItem { ClassId = "1113", Link = "https://steamitem.com/item1", Name = "Item1" };
             _context.SteamItems.Add(item);
             await _context.SaveChangesAsync();
 
@@ -104,7 +104,7 @@ namespace Tests.Dao
             await _dao.UpdateAsync(item);
 
             // Assert
-            var updatedItem = await _context.SteamItems.FindAsync(1);
+            var updatedItem = await _context.SteamItems.FirstOrDefaultAsync(s => s.ClassId == "1113");
             updatedItem.Should().NotBeNull();
             updatedItem.Link.Should().Be("https://steamitem.com/updated");
         }

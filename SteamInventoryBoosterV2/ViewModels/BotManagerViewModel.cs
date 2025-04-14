@@ -201,7 +201,7 @@ namespace SteamInventoryBoosterV2.ViewModels
 
                     LogItems.Add(new LogItemModel("Selling Item", item.MarketName, LogStatus.Started, "Looking for the prices set for this steam item."));
 
-                    var getSteamItemResult = await _steamItemService.GetSteamItemByNameAsync(item.MarketName);
+                    var getSteamItemResult = await _steamItemService.GetSteamItemByClassIdAsync(item.Classid);
 
                     if(!getSteamItemResult.IsSuccess || getSteamItemResult.Value == null)
                     {

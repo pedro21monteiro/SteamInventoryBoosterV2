@@ -186,5 +186,25 @@ namespace SteamInventoryBoosterV2.Services
                 return Result<SteamItem>.Failure(Error.InternalError);
             }
         }
+
+        public async Task<Result<SteamItem>> GetSteamItemByClassIdAsync(string classId)
+        {
+            try
+            {
+                var item = await _steamItemDao.GetSteamItemByClassIdAsync(classId);
+
+                if (item == null)
+                {
+                    return Result<SteamItem>.Failure(Error.SteamItemNotFound);
+                }
+
+                return Result<SteamItem>.Success(item);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Internal error while trying to get steam item by class id: {ex.Message} \n{ex}");
+                return Result<SteamItem>.Failure(Error.InternalError);
+            }
+        }
     }
 }

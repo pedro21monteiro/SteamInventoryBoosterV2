@@ -16,6 +16,17 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
             }
         }
 
+        private string _classId = String.Empty;
+        public string ClassId
+        {
+            get => _classId;
+            set
+            {
+                _classId = value;
+                OnPropertyChanged(nameof(ClassId));
+            }
+        }
+
         private string _link = String.Empty;
         public string Link
         {

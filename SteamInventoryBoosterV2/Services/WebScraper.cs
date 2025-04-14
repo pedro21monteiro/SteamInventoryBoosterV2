@@ -104,6 +104,16 @@ namespace SteamInventoryBoosterV2.Services
                 string elementImageUrlString = elementImageLink.GetAttribute("src");
                 steamItemInfoDto.IconUrl = elementImageUrlString;
 
+                // Wait javascript to load
+                wait.Until(driver =>
+                {
+                    return (bool)((IJavaScriptExecutor)driver).ExecuteScript("return typeof g_rgAssets !== 'undefined';");
+                });
+
+                // Extract classID
+                steamItemInfoDto.ClassId = (string)((IJavaScriptExecutor)_driverSteamItens)
+                    .ExecuteScript("return g_rgAssets[730][2][Object.keys(g_rgAssets[730][2])[0]].classid;");
+
                 steamItemInfoDto.LastVerification = DateTime.Now;
 
                 return Result<SteamItemInfoDto>.Success(steamItemInfoDto);

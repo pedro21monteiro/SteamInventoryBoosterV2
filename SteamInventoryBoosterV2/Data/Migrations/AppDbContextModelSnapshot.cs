@@ -33,6 +33,10 @@ namespace SteamInventoryBoosterV2.Migrations
                     b.Property<decimal>("BuyPrice")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<string>("ClassId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<decimal>("HighestPurchaseOrder")
                         .HasColumnType("decimal(18,2)");
 

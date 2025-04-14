@@ -10,6 +10,7 @@ namespace SteamInventoryBoosterV2.Models.Mappings
         {
             return new SteamItem
             {
+                ClassId = dto.ClassId,
                 Link = dto.Link,
                 Name = dto.Name,
                 Price = dto.Price,
@@ -23,6 +24,7 @@ namespace SteamInventoryBoosterV2.Models.Mappings
         {
             return new SteamItemInfoDto
             {
+                ClassId = entity.ClassId,
                 Link = entity.Link,
                 Name = entity.Name,
                 Price = entity.Price,
@@ -36,6 +38,7 @@ namespace SteamInventoryBoosterV2.Models.Mappings
         {
             return new SteamItem
             {
+                ClassId = model.ClassId,
                 Id = model.Id,
                 Link = model.Link,
                 Name = model.Name,
@@ -53,6 +56,7 @@ namespace SteamInventoryBoosterV2.Models.Mappings
         {
             return new SteamItemModel
             {
+                ClassId = entity.ClassId,
                 Id = entity.Id,
                 Link = entity.Link,
                 Name = entity.Name,
@@ -68,6 +72,7 @@ namespace SteamInventoryBoosterV2.Models.Mappings
 
         public static void UpdateEntityInfo(SteamItem existingItem, SteamItemInfoDto dto)
         {
+            existingItem.ClassId = dto.ClassId;
             existingItem.Name = dto.Name;
             existingItem.Price = dto.Price;
             existingItem.HighestPurchaseOrder = dto.HighestPurchaseOrder;
@@ -77,6 +82,7 @@ namespace SteamInventoryBoosterV2.Models.Mappings
 
         public static void UpdateItemViewModelInfo(SteamItemModel model, SteamItem entity)
         {
+            model.ClassId = entity.ClassId;
             model.Name = entity.Name;
             model.Price = entity.Price;
             model.HighestPurchaseOrder = entity.HighestPurchaseOrder;

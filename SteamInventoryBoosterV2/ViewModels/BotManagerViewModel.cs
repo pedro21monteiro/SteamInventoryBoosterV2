@@ -278,7 +278,7 @@ namespace SteamInventoryBoosterV2.ViewModels
 
                     LogItems.Add(new LogItemModel("Update Item", item.Name, LogStatus.InProgress, "Trying to update steam item information."));
 
-                    var updateItemInfoResult = await _steamItemService.UpdateSteamItemInfoAsync(item.Id);
+                    var updateItemInfoResult = await _steamItemService.UpdateSteamItemInfoAsync(item.ClassId);
 
                     if (!updateItemInfoResult.IsSuccess || updateItemInfoResult.Value == null)
                     {

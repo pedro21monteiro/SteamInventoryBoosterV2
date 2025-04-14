@@ -35,7 +35,7 @@ namespace Tests.Dao
         public async Task ItemExistsByLinkAsync_ReturnsTrue_WhenItemExists()
         {
             // Arrange
-            var item = new SteamItem { Id = 1, Link = "https://steamitem.com/item1" };
+            var item = new SteamItem { ClassId = "1", Link = "https://steamitem.com/item1" };
             _context.SteamItems.Add(item);
             await _context.SaveChangesAsync();
 
@@ -50,7 +50,7 @@ namespace Tests.Dao
         public async Task CreateAsync_AddsItemToDatabase()
         {
             // Arrange
-            var steamItem = new SteamItem { Id = 1, Link = "https://steamitem.com/item2" };
+            var steamItem = new SteamItem { ClassId = "1", Link = "https://steamitem.com/item2" };
 
             // Act
             await _dao.CreateAsync(steamItem);
@@ -63,7 +63,7 @@ namespace Tests.Dao
         public async Task CreateAsync_ThrowsException_WhenAddingDuplicateItem()
         {
             // Arrange
-            var steamItem = new SteamItem { Id = 1, Link = "https://steamitem.com/item2" };
+            var steamItem = new SteamItem { ClassId = "1", Link = "https://steamitem.com/item2" };
 
             // Act
             await _dao.CreateAsync(steamItem);
@@ -95,7 +95,7 @@ namespace Tests.Dao
         public async Task UpdateAsync_UpdatesItem()
         {
             // Arrange
-            var item = new SteamItem { Id = 1, Link = "https://steamitem.com/item1", Name = "Item1" };
+            var item = new SteamItem { ClassId = "1", Link = "https://steamitem.com/item1", Name = "Item1" };
             _context.SteamItems.Add(item);
             await _context.SaveChangesAsync();
 
@@ -113,16 +113,16 @@ namespace Tests.Dao
         public async Task GetSteamItemByIdAsync_ReturnsItem_WhenExists()
         {
             // Arrange
-            var item = new SteamItem { Id = 4, Link = "https://steamitem.com/item4" };
+            var item = new SteamItem { ClassId = "4", Link = "https://steamitem.com/item4" };
             _context.SteamItems.Add(item);
             await _context.SaveChangesAsync();
 
             // Act
-            var result = await _dao.GetSteamItemByIdAsync(4);
+            var result = await _dao.GetSteamItemByClassIdAsync("4");
 
             // Assert
             result.Should().NotBeNull();
-            result.Id.Should().Be(4);
+            result.ClassId.Should().Be("4");
             result.Link.Should().Be("https://steamitem.com/item4");
         }
 
@@ -130,7 +130,7 @@ namespace Tests.Dao
         public async Task DeleteAsync_RemovesItemFromDatabase()
         {
             // Arrange
-            var item = new SteamItem { Id = 5, Link = "https://steamitem.com/item5" };
+            var item = new SteamItem { ClassId = "5", Link = "https://steamitem.com/item5" };
             _context.SteamItems.Add(item);
             await _context.SaveChangesAsync();
 

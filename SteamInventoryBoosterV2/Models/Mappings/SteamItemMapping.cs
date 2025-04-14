@@ -39,7 +39,6 @@ namespace SteamInventoryBoosterV2.Models.Mappings
             return new SteamItem
             {
                 ClassId = model.ClassId,
-                Id = model.Id,
                 Link = model.Link,
                 Name = model.Name,
                 Price = model.Price,
@@ -57,7 +56,6 @@ namespace SteamInventoryBoosterV2.Models.Mappings
             return new SteamItemModel
             {
                 ClassId = entity.ClassId,
-                Id = entity.Id,
                 Link = entity.Link,
                 Name = entity.Name,
                 BuyPrice = entity.BuyPrice,

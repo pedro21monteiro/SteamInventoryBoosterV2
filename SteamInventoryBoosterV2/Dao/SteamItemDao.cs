@@ -36,9 +36,9 @@ namespace SteamInventoryBoosterV2.Dao
             await _context.SaveChangesAsync();
         }
 
-        public async Task<SteamItem?> GetSteamItemByIdAsync(int id)
+        public async Task<SteamItem?> GetSteamItemByClassIdAsync(string ClassId)
         {
-            return await _context.SteamItems.FirstOrDefaultAsync(i => i.Id == id);
+            return await _context.SteamItems.SingleOrDefaultAsync(i => i.ClassId == ClassId);
         }
 
         public async Task DeleteAsync(SteamItem item)

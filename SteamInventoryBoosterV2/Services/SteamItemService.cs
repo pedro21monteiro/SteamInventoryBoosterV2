@@ -64,11 +64,11 @@ namespace SteamInventoryBoosterV2.Services
             }
         }
 
-        public async Task<Result<SteamItem>> EditItemBuySellPricesAsync(int itemId, decimal newBuyPrice, decimal newSellPrice)
+        public async Task<Result<SteamItem>> EditItemBuySellPricesAsync(string classId, decimal newBuyPrice, decimal newSellPrice)
         {
             try
             {
-                var existingItem = await _steamItemDao.GetSteamItemByIdAsync(itemId);
+                var existingItem = await _steamItemDao.GetSteamItemByClassIdAsync(classId);
 
                 if (existingItem == null)
                 {
@@ -89,11 +89,11 @@ namespace SteamInventoryBoosterV2.Services
             }
         }
 
-        public async Task<Result> DeleteSteamItemAsync(int itemId)
+        public async Task<Result> DeleteSteamItemAsync(string classId)
         {
             try
             {
-                var existingItem = await _steamItemDao.GetSteamItemByIdAsync(itemId);
+                var existingItem = await _steamItemDao.GetSteamItemByClassIdAsync(classId);
 
                 if (existingItem == null)
                 {
@@ -111,11 +111,11 @@ namespace SteamInventoryBoosterV2.Services
             }
         }
 
-        public async Task<Result<SteamItem>> UpdateSteamItemInfoAsync(int itemId)
+        public async Task<Result<SteamItem>> UpdateSteamItemInfoAsync(string classId)
         {
             try
             {
-                var existingItem = await _steamItemDao.GetSteamItemByIdAsync(itemId);
+                var existingItem = await _steamItemDao.GetSteamItemByClassIdAsync(classId);
 
                 if (existingItem == null)
                 {
@@ -143,11 +143,11 @@ namespace SteamInventoryBoosterV2.Services
             }
         }
 
-        public async Task<Result<SteamItem>> ChangeVisibilityAsync(int itemId)
+        public async Task<Result<SteamItem>> ChangeVisibilityAsync(string classId)
         {
             try
             {
-                var existingItem = await _steamItemDao.GetSteamItemByIdAsync(itemId);
+                var existingItem = await _steamItemDao.GetSteamItemByClassIdAsync(classId);
 
                 if (existingItem == null)
                 {

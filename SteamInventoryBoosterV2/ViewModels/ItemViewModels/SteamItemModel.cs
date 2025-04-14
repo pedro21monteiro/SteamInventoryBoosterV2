@@ -5,17 +5,6 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
 {
     public class SteamItemModel : INotifyPropertyChanged
     {
-        private int _id;
-        public int Id
-        {
-            get => _id;
-            set
-            {
-                _id = value;
-                OnPropertyChanged(nameof(Id));
-            }
-        }
-
         private string _classId = String.Empty;
         public string ClassId
         {

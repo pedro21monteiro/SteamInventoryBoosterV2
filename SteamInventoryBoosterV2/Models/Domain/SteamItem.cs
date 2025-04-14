@@ -1,11 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SteamInventoryBoosterV2.Models.Domain
 {
     public class SteamItem
     {
         [Key]
-        public int Id { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public string ClassId { get; set; } = string.Empty;
         public string Link { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;

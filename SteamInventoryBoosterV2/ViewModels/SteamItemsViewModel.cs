@@ -266,7 +266,7 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
                 return;
             }
 
-            Result<SteamItem> editSteamItemResult = await _steamItemService.EditItemBuySellPricesAsync(currentItem.Id, buyPrice, sellPrice);
+            Result<SteamItem> editSteamItemResult = await _steamItemService.EditItemBuySellPricesAsync(currentItem.ClassId, buyPrice, sellPrice);
 
             if (!editSteamItemResult.IsSuccess)
             {
@@ -291,7 +291,7 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
                 return;
             }
 
-            Result deleteSteamItemResult = await _steamItemService.DeleteSteamItemAsync(currentItem.Id);
+            Result deleteSteamItemResult = await _steamItemService.DeleteSteamItemAsync(currentItem.ClassId);
 
             if (!deleteSteamItemResult.IsSuccess)
             {
@@ -308,7 +308,7 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
         private async Task UpdateSteamItemAsync(object parameter)
         {
             SteamItemModel currentItem = SelectedItem;
-            Result<SteamItem> updateSteamItemResult = await _steamItemService.UpdateSteamItemInfoAsync(currentItem.Id);
+            Result<SteamItem> updateSteamItemResult = await _steamItemService.UpdateSteamItemInfoAsync(currentItem.ClassId);
 
             if (!updateSteamItemResult.IsSuccess)
             {
@@ -327,7 +327,7 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
         {
             SteamItemModel currentItem = SelectedItem;
 
-            Result<SteamItem> hideSteamItemResult = await _steamItemService.ChangeVisibilityAsync(currentItem.Id);
+            Result<SteamItem> hideSteamItemResult = await _steamItemService.ChangeVisibilityAsync(currentItem.ClassId);
 
             if (!hideSteamItemResult.IsSuccess)
             {
@@ -469,7 +469,7 @@ namespace SteamInventoryBoosterV2.ViewModels.ItemViewModels
 
         private void UpdateItemInAllSteamItensInformationList(SteamItemModel updatedItem)
         {
-            var originalItem = _allSteamItensInformation.FirstOrDefault(i => i.Id == updatedItem.Id);
+            var originalItem = _allSteamItensInformation.FirstOrDefault(i => i.ClassId == updatedItem.ClassId);
 
             originalItem = updatedItem;
         }

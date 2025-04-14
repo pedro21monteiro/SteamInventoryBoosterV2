@@ -24,18 +24,11 @@ namespace SteamInventoryBoosterV2.Migrations
 
             modelBuilder.Entity("SteamInventoryBoosterV2.Models.Domain.SteamItem", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<string>("ClassId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<decimal>("BuyPrice")
                         .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("ClassId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("HighestPurchaseOrder")
                         .HasColumnType("decimal(18,2)");
@@ -64,7 +57,7 @@ namespace SteamInventoryBoosterV2.Migrations
                     b.Property<decimal>("SellPrice")
                         .HasColumnType("decimal(18,2)");
 
-                    b.HasKey("Id");
+                    b.HasKey("ClassId");
 
                     b.HasIndex("Link")
                         .IsUnique();

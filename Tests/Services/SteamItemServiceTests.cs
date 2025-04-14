@@ -127,10 +127,10 @@ namespace Tests.Services
         public async Task EditItemBuySellPricesAsync_ReturnsFailure_WhenItemNotFound()
         {
             // Arrange
-            _steamItemDao.GetSteamItemByIdAsync(1).Returns((SteamItem)null!);
+            _steamItemDao.GetSteamItemByClassIdAsync("1").Returns((SteamItem)null!);
 
             // Act
-            var result = await _steamItemService.EditItemBuySellPricesAsync(1, 10, 20);
+            var result = await _steamItemService.EditItemBuySellPricesAsync("1", 10, 20);
 
             // Assert
             result.IsSuccess.Should().BeFalse();
@@ -141,11 +141,11 @@ namespace Tests.Services
         public async Task EditItemBuySellPricesAsync_ReturnsSuccess_WhenItemUpdated()
         {
             // Arrange
-            var item = new SteamItem { Id = 1, BuyPrice = 5, SellPrice = 15 };
-            _steamItemDao.GetSteamItemByIdAsync(1).Returns(item);
+            var item = new SteamItem { ClassId = "1", BuyPrice = 5, SellPrice = 15 };
+            _steamItemDao.GetSteamItemByClassIdAsync("1").Returns(item);
 
             // Act
-            var result = await _steamItemService.EditItemBuySellPricesAsync(1, 10, 20);
+            var result = await _steamItemService.EditItemBuySellPricesAsync("1", 10, 20);
 
             // Assert
             result.IsSuccess.Should().BeTrue();
@@ -157,12 +157,12 @@ namespace Tests.Services
         public async Task EditItemBuySellPricesAsync_ShouldReturnFailure_WhenUpdateAsyncThrowsException()
         {
             // Arrange
-            var item = new SteamItem { Id = 1, BuyPrice = 5, SellPrice = 15 };
-            _steamItemDao.GetSteamItemByIdAsync(1).Returns(item);
+            var item = new SteamItem { ClassId = "1", BuyPrice = 5, SellPrice = 15 };
+            _steamItemDao.GetSteamItemByClassIdAsync("1").Returns(item);
             _steamItemDao.UpdateAsync(Arg.Any<SteamItem>()).Throws(new Exception());
 
             // Act
-            var result = await _steamItemService.EditItemBuySellPricesAsync(1, 10, 20);
+            var result = await _steamItemService.EditItemBuySellPricesAsync("1", 10, 20);
 
             // Assert
             result.IsSuccess.Should().BeFalse();
@@ -174,10 +174,10 @@ namespace Tests.Services
         public async Task DeleteSteamItemAsync_ReturnsFailure_WhenItemNotFound()
         {
             // Arrange
-            _steamItemDao.GetSteamItemByIdAsync(1).Returns((SteamItem)null!);
+            _steamItemDao.GetSteamItemByClassIdAsync("1").Returns((SteamItem)null!);
 
             // Act
-            var result = await _steamItemService.DeleteSteamItemAsync(1);
+            var result = await _steamItemService.DeleteSteamItemAsync("1");
 
             // Assert
             result.IsSuccess.Should().BeFalse();
@@ -188,11 +188,11 @@ namespace Tests.Services
         public async Task DeleteSteamItemAsync_ReturnsSuccess_WhenItemDeleted()
         {
             // Arrange
-            var item = new SteamItem { Id = 1 };
-            _steamItemDao.GetSteamItemByIdAsync(1).Returns(item);
+            var item = new SteamItem { ClassId = "1" };
+            _steamItemDao.GetSteamItemByClassIdAsync("1").Returns(item);
 
             // Act
-            var result = await _steamItemService.DeleteSteamItemAsync(1);
+            var result = await _steamItemService.DeleteSteamItemAsync("1");
 
             // Assert
             result.IsSuccess.Should().BeTrue();
@@ -202,11 +202,11 @@ namespace Tests.Services
         public async Task DeleteSteamItemAsync_ShouldReturnFailure_WhenDeleteAsyncThrowsException()
         {
             // Arrange
-            var item = new SteamItem { Id = 1 };
-            _steamItemDao.GetSteamItemByIdAsync(1).Throws(new Exception());
+            var item = new SteamItem { ClassId= "1" };
+            _steamItemDao.GetSteamItemByClassIdAsync("1").Throws(new Exception());
 
             // Act
-            var result = await _steamItemService.DeleteSteamItemAsync(1);
+            var result = await _steamItemService.DeleteSteamItemAsync("1");
 
             // Assert
             result.IsSuccess.Should().BeFalse();
@@ -218,10 +218,10 @@ namespace Tests.Services
         public async Task UpdateSteamItemInfoAsync_ReturnsFailure_WhenItemNotFound()
         {
             // Arrange
-            _steamItemDao.GetSteamItemByIdAsync(1).Returns((SteamItem)null!);
+            _steamItemDao.GetSteamItemByClassIdAsync("1").Returns((SteamItem)null!);
 
             // Act
-            var result = await _steamItemService.UpdateSteamItemInfoAsync(1);
+            var result = await _steamItemService.UpdateSteamItemInfoAsync("1");
 
             // Assert
             result.IsSuccess.Should().BeFalse();
@@ -232,14 +232,14 @@ namespace Tests.Services
         public async Task UpdateSteamItemInfoAsync_ReturnsFailure_WhenCollectItemInfoIsFailure()
         {
             // Arrange
-            var item = new SteamItem { Id = 1, Link = "https://steamitem.com/item1" };
+            var item = new SteamItem { ClassId = "1", Link = "https://steamitem.com/item1" };
             var steamItemDto = new SteamItemInfoDto { Link = "https://steamitem.com/item1" };
 
-            _steamItemDao.GetSteamItemByIdAsync(1).Returns(item);
+            _steamItemDao.GetSteamItemByClassIdAsync("1").Returns(item);
             _webScraper.CollectBasicSteamItemInformation(item.Link).Returns(Result<SteamItemInfoDto>.Failure(Error.InternalError));
 
             // Act
-            var result = await _steamItemService.UpdateSteamItemInfoAsync(1);
+            var result = await _steamItemService.UpdateSteamItemInfoAsync("1");
 
             // Assert
             result.IsSuccess.Should().BeFalse();
@@ -250,14 +250,14 @@ namespace Tests.Services
         public async Task UpdateSteamItemInfoAsync_ReturnsSuccess_WhenItemUpdated()
         {
             // Arrange
-            var item = new SteamItem { Id = 1, Link = "https://steamitem.com/item1" };
+            var item = new SteamItem { ClassId = "1", Link = "https://steamitem.com/item1" };
             var steamItemDto = new SteamItemInfoDto { Link = "https://steamitem.com/item1" };
 
-            _steamItemDao.GetSteamItemByIdAsync(1).Returns(item);
+            _steamItemDao.GetSteamItemByClassIdAsync("1").Returns(item);
             _webScraper.CollectBasicSteamItemInformation(item.Link).Returns(Result<SteamItemInfoDto>.Success(steamItemDto));
 
             // Act
-            var result = await _steamItemService.UpdateSteamItemInfoAsync(1);
+            var result = await _steamItemService.UpdateSteamItemInfoAsync("1");
 
             // Assert
             result.IsSuccess.Should().BeTrue();
@@ -267,14 +267,14 @@ namespace Tests.Services
         public async Task UpdateSteamItemInfoAsync_ShouldReturnFailure_WhenCollectBasicSteamItemInformationThrowsException()
         {
             // Arrange
-            var item = new SteamItem { Id = 1, Link = "https://steamitem.com/item1" };
+            var item = new SteamItem { ClassId = "1", Link = "https://steamitem.com/item1" };
             var steamItemDto = new SteamItemInfoDto { Link = "https://steamitem.com/item1" };
 
-            _steamItemDao.GetSteamItemByIdAsync(1).Returns(item);
+            _steamItemDao.GetSteamItemByClassIdAsync("1").Returns(item);
             _webScraper.CollectBasicSteamItemInformation(item.Link).Throws(new Exception());
 
             // Act
-            var result = await _steamItemService.UpdateSteamItemInfoAsync(1);
+            var result = await _steamItemService.UpdateSteamItemInfoAsync("1");
 
             // Assert
             result.IsSuccess.Should().BeFalse();
@@ -286,10 +286,10 @@ namespace Tests.Services
         public async Task ChangeVisibilityAsync_ReturnsFailure_WhenItemNotFound()
         {
             // Arrange
-            _steamItemDao.GetSteamItemByIdAsync(1).Returns((SteamItem)null);
+            _steamItemDao.GetSteamItemByClassIdAsync("1").Returns((SteamItem)null);
 
             // Act
-            var result = await _steamItemService.ChangeVisibilityAsync(1);
+            var result = await _steamItemService.ChangeVisibilityAsync("1");
 
             // Assert
             result.IsSuccess.Should().BeFalse();
@@ -300,11 +300,11 @@ namespace Tests.Services
         public async Task ChangeVisibilityAsync_ReturnsSuccess_WhenVisibilityToggled()
         {
             // Arrange
-            var item = new SteamItem { Id = 1, IsVisible = true };
-            _steamItemDao.GetSteamItemByIdAsync(1).Returns(item);
+            var item = new SteamItem { ClassId = "1", IsVisible = true };
+            _steamItemDao.GetSteamItemByClassIdAsync("1").Returns(item);
 
             // Act
-            var result = await _steamItemService.ChangeVisibilityAsync(1);
+            var result = await _steamItemService.ChangeVisibilityAsync("1");
 
             // Assert
             result.IsSuccess.Should().BeTrue();
@@ -315,12 +315,12 @@ namespace Tests.Services
         public async Task ChangeVisibilityAsync_ShouldReturnFailure_WhenUpdateAsyncThrowsException()
         {
             // Arrange
-            var item = new SteamItem { Id = 1, IsVisible = true };
-            _steamItemDao.GetSteamItemByIdAsync(1).Returns(item);
+            var item = new SteamItem { ClassId = "1", IsVisible = true };
+            _steamItemDao.GetSteamItemByClassIdAsync("1").Returns(item);
             _steamItemDao.UpdateAsync(Arg.Any<SteamItem>()).Throws(new Exception());
 
             // Act
-            var result = await _steamItemService.ChangeVisibilityAsync(1);
+            var result = await _steamItemService.ChangeVisibilityAsync("1");
 
             // Assert
             result.IsSuccess.Should().BeFalse();

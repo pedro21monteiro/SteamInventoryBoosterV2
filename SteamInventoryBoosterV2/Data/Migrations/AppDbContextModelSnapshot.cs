@@ -22,6 +22,52 @@ namespace SteamInventoryBoosterV2.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("SteamInventoryBoosterV2.Models.Domain.OwnedItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("AcquiredAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("AssetId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClassId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<decimal?>("ListedPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("PurchasePrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("SalePrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime?>("SoldAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SteamItemClassId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClassId");
+
+                    b.HasIndex("SteamItemClassId");
+
+                    b.ToTable("OwnedItem");
+                });
+
             modelBuilder.Entity("SteamInventoryBoosterV2.Models.Domain.SteamItem", b =>
                 {
                     b.Property<string>("ClassId")
@@ -66,6 +112,26 @@ namespace SteamInventoryBoosterV2.Migrations
                         .IsUnique();
 
                     b.ToTable("SteamItems");
+                });
+
+            modelBuilder.Entity("SteamInventoryBoosterV2.Models.Domain.OwnedItem", b =>
+                {
+                    b.HasOne("SteamInventoryBoosterV2.Models.Domain.SteamItem", "SteamItem")
+                        .WithMany()
+                        .HasForeignKey("ClassId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SteamInventoryBoosterV2.Models.Domain.SteamItem", null)
+                        .WithMany("OwnedItems")
+                        .HasForeignKey("SteamItemClassId");
+
+                    b.Navigation("SteamItem");
+                });
+
+            modelBuilder.Entity("SteamInventoryBoosterV2.Models.Domain.SteamItem", b =>
+                {
+                    b.Navigation("OwnedItems");
                 });
 #pragma warning restore 612, 618
         }

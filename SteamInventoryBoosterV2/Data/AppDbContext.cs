@@ -23,6 +23,11 @@ namespace SteamInventoryBoosterV2.Data
             modelBuilder.Entity<SteamItem>()
                 .HasIndex(u => u.Name)
                 .IsUnique();
+
+            modelBuilder.Entity<OwnedItem>()
+                .HasOne(o => o.SteamItem)
+                .WithMany()
+                .HasForeignKey(o => o.ClassId);
         }
     }
 }

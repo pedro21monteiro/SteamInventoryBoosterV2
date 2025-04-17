@@ -17,5 +17,6 @@ namespace SteamInventoryBoosterV2.Models.Domain
         public decimal SellPrice { get; set; }
         public string IconUrl { get; set; } = string.Empty;
         public bool IsVisible { get; set; }
+        public ICollection<OwnedItem> OwnedItems { get; set; } = new List<OwnedItem>();
     }
 }

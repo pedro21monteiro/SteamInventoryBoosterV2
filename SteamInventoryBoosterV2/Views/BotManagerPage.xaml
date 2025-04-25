@@ -20,6 +20,7 @@
                       IsEnabled="{Binding IsComboBoxEnabled}">
                 <ComboBoxItem Content="Sell Items" Tag="SellItems"/>
                 <ComboBoxItem Content="Update Items Information" Tag="UpdateItemsInfo"/>
+                <ComboBoxItem Content="Update Owned Items Information" Tag="UpdateOwnedItemsInfo"/>
             </ComboBox>
 
             <Button x:Name="btnStartStop" Content="{Binding StartStopButtonText}" Width="80" Height="30"  Margin="0,0,10,0" FontWeight="Bold"

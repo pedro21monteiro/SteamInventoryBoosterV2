@@ -1,5 +1,6 @@
 ﻿using OpenQA.Selenium.BiDi.Modules.Storage;
 using SteamInventoryBoosterV2.Interfaces.IServices;
+using SteamInventoryBoosterV2.Models.Domain;
 using SteamInventoryBoosterV2.Models.SteamApi.Processed;
 using SteamInventoryBoosterV2.Models.SteamApi.Response;
 using SteamInventoryBoosterV2.Models.Utilities;
@@ -202,50 +203,30 @@ namespace SteamInventoryBoosterV2.ViewModels
             {
                 LogItems.Add(new LogItemModel("Update Function", String.Empty, LogStatus.Started, "Starting the functionality of updating Steam items information."));
 
-                LogItems.Add(new LogItemModel("Get DB Info", String.Empty, LogStatus.InProgress, "Getting information from the steam Items in database ."));
+                var steamItems = await GetSteamItemsFromDatabaseAsync();
+                if (steamItems == null) return;
+                token.ThrowIfCancellationRequested();
 
-                var getSteamItemsResult = await _steamItemService.GetAllItemsAsync();
-
-                if(!getSteamItemsResult.IsSuccess || getSteamItemsResult.Value == null)
+                foreach (var item in steamItems)
                 {
-                    LogItems.Add(new LogItemModel("Get DB Info", String.Empty, LogStatus.Failure, getSteamItemsResult.Error!.Message));
-                    LogItems.Add(new LogItemModel("Update Function", String.Empty, LogStatus.Finished, "Finished the functionality of updating Steam items information."));
-                    return;
-                }
-
-                LogItems.Add(new LogItemModel("Get DB Info", String.Empty, LogStatus.Success, "DB Steam items information obtained successfully."));
-
-                foreach(var item in getSteamItemsResult.Value)
-                {
-                    // Get other item information every 5000 milliseconds, to don't block session
+                    token.ThrowIfCancellationRequested();
                     await Task.Delay(5000, token);
-                    if (token.IsCancellationRequested) throw new OperationCanceledException();
 
-                    LogItems.Add(new LogItemModel("Update Item", item.Name, LogStatus.InProgress, "Trying to update steam item information."));
-
-                    var updateItemInfoResult = await _steamItemService.UpdateSteamItemInfoAsync(item.ClassId);
-
-                    if (!updateItemInfoResult.IsSuccess || updateItemInfoResult.Value == null)
-                    {
-                        LogItems.Add(new LogItemModel("Update Item", item.Name, LogStatus.Failure, updateItemInfoResult.Error!.Message));
-                        continue;
-                    }
-
-                    LogItems.Add(new LogItemModel("Update Item", item.Name, LogStatus.Success, "Steam item information updated successfully."));
+                    await UpdateSteamItemAsync(item);
                 }
 
-                LogItems.Add(new LogItemModel("Selling Function", String.Empty, LogStatus.Finished, "Finished the functionality of updating Steam items information."));
+                LogFinishUpdatingStemItemsInfo();
             }
             catch (OperationCanceledException)
             {
                 LogItems.Add(new LogItemModel("Update Function", String.Empty, LogStatus.Stopped, "Update steam items information stopped by the user."));
-                LogItems.Add(new LogItemModel("Update Function", String.Empty, LogStatus.Finished, "Finished the functionality of updating Steam items information."));
+                LogFinishUpdatingStemItemsInfo();
                 Console.WriteLine("Update steam items information function stopped by the user.");
             }
             catch (Exception ex)
             {
-                LogItems.Add(new LogItemModel("Selling Function", String.Empty, LogStatus.Failure, "An internal error occurred. The function will be terminated."));
-                LogItems.Add(new LogItemModel("Selling Function", String.Empty, LogStatus.Finished, "Finished the functionality of updating Steam items information."));
+                LogItems.Add(new LogItemModel("Update Function", String.Empty, LogStatus.Failure, "An internal error occurred. The function will be terminated."));
+                LogFinishUpdatingStemItemsInfo();
                 Console.WriteLine($"Internal in updating Steam items information function: {ex}");
             }
             finally
@@ -384,6 +365,43 @@ namespace SteamInventoryBoosterV2.ViewModels
         private void LogFinishSelling()
         {
             LogItems.Add(new LogItemModel("Selling Function", string.Empty, LogStatus.Finished, "Finished the functionality of selling Steam items."));
+        }
+
+        private async Task UpdateSteamItemAsync(SteamItem item)
+        {
+            LogItems.Add(new LogItemModel("Update Item", item.Name, LogStatus.InProgress, "Trying to update steam item information."));
+
+            var updateResult = await _steamItemService.UpdateSteamItemInfoAsync(item.ClassId);
+
+            if (!updateResult.IsSuccess || updateResult.Value == null)
+            {
+                LogItems.Add(new LogItemModel("Update Item", item.Name, LogStatus.Failure, updateResult.Error!.Message));
+                return;
+            }
+
+            LogItems.Add(new LogItemModel("Update Item", item.Name, LogStatus.Success, "Steam item information updated successfully."));
+        }
+
+        private async Task<List<SteamItem>?> GetSteamItemsFromDatabaseAsync()
+        {
+            LogItems.Add(new LogItemModel("Get DB Info", string.Empty, LogStatus.InProgress, "Getting information from the steam items in database."));
+
+            var result = await _steamItemService.GetAllItemsAsync();
+
+            if (!result.IsSuccess || result.Value == null)
+            {
+                LogItems.Add(new LogItemModel("Get DB Info", string.Empty, LogStatus.Failure, result.Error!.Message));
+                LogItems.Add(new LogItemModel("Update Function", string.Empty, LogStatus.Finished, "Finished the functionality of updating Steam items information."));
+                return null;
+            }
+
+            LogItems.Add(new LogItemModel("Get DB Info", string.Empty, LogStatus.Success, "DB Steam items information obtained successfully."));
+            return result.Value;
+        }
+
+        private void LogFinishUpdatingStemItemsInfo()
+        {
+            LogItems.Add(new LogItemModel("Update Function", String.Empty, LogStatus.Finished, "Finished the functionality of updating Steam items information."));
         }
     }
 }

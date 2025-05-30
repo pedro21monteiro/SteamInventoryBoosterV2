@@ -9,8 +9,8 @@ namespace SteamInventoryBoosterV2.Services
 {
     public class SteamApiService : ISteamApiService
     {
-        // Can only place orders for 5000 items of inventory, if it go over I'll have to find another solution
-        private readonly string _urlInventoryInfo = "https://steamcommunity.com/inventory/76561198295773303/730/2?l=portuguese&count=5000";
+        // Can only place orders for 1000 items of inventory
+        private readonly string _urlInventoryInfo = "https://steamcommunity.com/inventory/76561198295773303/730/2?l=portuguese&count=1000";
 
         // URL for the sales endpoint
         private readonly string _sellItemUrl = "https://steamcommunity.com/market/sellitem/";

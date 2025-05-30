@@ -13,14 +13,18 @@ namespace SteamInventoryBoosterV2.Services
             return (from asset in inventoryResponse.assets
                     join description in inventoryResponse.descriptions
                     on new { asset.classid, asset.instanceid } equals new { description.classid, description.instanceid }
-                    where description.tradable == 1
+                    into joinedDescriptions
+                    let firstTradableDescription = joinedDescriptions
+                        .Where(d => d.tradable == 1)
+                        .FirstOrDefault()
+                    where firstTradableDescription != null
                     select new SteamAssetItem
                     {
                         Assetid = asset.assetid,
-                        Classid = description.classid,
-                        Instanceid = description.instanceid,
-                        Tradable = description.tradable,
-                        MarketName = description.market_name
+                        Classid = asset.classid,
+                        Instanceid = asset.instanceid,
+                        Tradable = firstTradableDescription.tradable,
+                        MarketName = firstTradableDescription.market_name
                     }).ToList();
         }
 
@@ -32,13 +36,17 @@ namespace SteamInventoryBoosterV2.Services
             return (from asset in inventoryResponse.assets
                     join description in inventoryResponse.descriptions
                     on new { asset.classid, asset.instanceid } equals new { description.classid, description.instanceid }
+                    into joinedDescriptions
+                    let firstTradableDescription = joinedDescriptions
+                        .FirstOrDefault()
+                    where firstTradableDescription != null
                     select new SteamAssetItem
                     {
                         Assetid = asset.assetid,
-                        Classid = description.classid,
-                        Instanceid = description.instanceid,
-                        Tradable = description.tradable,
-                        MarketName = description.market_name
+                        Classid = asset.classid,
+                        Instanceid = asset.instanceid,
+                        Tradable = firstTradableDescription.tradable,
+                        MarketName = firstTradableDescription.market_name
                     }).ToList();
         }
     }

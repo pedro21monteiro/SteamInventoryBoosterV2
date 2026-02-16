@@ -74,11 +74,7 @@ namespace SteamInventoryBoosterV2.Services
                 steamItemInfoDto.Link = link;
 
                 // Extract Name
-                IWebElement elementName = wait.Until(driver =>
-                {
-                    return driver.FindElement(By.CssSelector(".hover_item_name"));
-                });
-                steamItemInfoDto.Name = elementName.Text;
+                steamItemInfoDto.Name = _driverSteamItens.ExecuteScript("return g_rgAssets[730][2][Object.keys(g_rgAssets[730][2])[0]].name;").ToString();
 
                 // Extract Actual Price
                 IWebElement elementPrice = wait.Until(driver =>

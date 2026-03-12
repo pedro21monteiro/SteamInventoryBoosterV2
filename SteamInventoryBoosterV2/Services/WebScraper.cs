@@ -95,7 +95,7 @@ namespace SteamInventoryBoosterV2.Services
                 // Extract item image link
                 IWebElement elementImageLink = wait.Until(driver =>
                 {
-                    return driver.FindElement(By.CssSelector("#mainContents > div.market_page_fullwidth.market_listing_firstsection > div > div.market_listing_largeimage > img"));
+                    return driver.FindElement(By.CssSelector("#mainContents > div.market_page_fullwidth.market_listing_firstsection > div > div.largeiteminfo_react_placeholder > div > div._3ugvZ2nny7eChIYJuwKYO-._3swtpIrvrz0futGxsN8SLc._1jkRBcprAG-KoLJ4aRxwVr._1TqZRAPkIEpJ8piAHaVHvn._1dhvtWTnQHytZWk5i-f-We._3JCkAyd9cnB90tRcDLPp4W._12ampOcrpRamy1y301kEaK._1SxQuUnaM-MXeF5UfssWve._3nHL7awgK1Qei1XivGvHMK > div > img"));
                 });
                 string elementImageUrlString = elementImageLink.GetAttribute("src");
                 steamItemInfoDto.IconUrl = elementImageUrlString;
